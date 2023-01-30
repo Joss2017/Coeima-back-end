@@ -21,23 +21,23 @@ export class Message {
 
   //-------------------------------- génération des colonnes-------------------------------------------//
 
-  @Column('uuid')
-  idSender?: string;
-
-  @Column('uuid')
-  idReceiver?: string;
-
   @Column({
     nullable: true,
     type: 'text',
   })
   body: string;
 
-  //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//
+  //----------------------liaison 2 clés étrangères sender/receiver avec l'entité users--------------------//
 
-  @ManyToOne(() => User, (users) => users.id, {
+  @ManyToOne(() => User, (users) => users.messagesReceived, {
     onDelete: 'CASCADE',
     nullable: false,
   })
-  userId: User;
+  Receiver: User;
+
+  @ManyToOne(() => User, (users) => users.messagesSent, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
+  Sender: User;
 }

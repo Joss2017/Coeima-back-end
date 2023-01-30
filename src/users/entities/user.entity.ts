@@ -80,8 +80,15 @@ export class User {
   })
   comments: Comment[];
 
-  @OneToMany(() => Message, (messages) => messages.userId, {
+  //----------------------liaison l'entité messages--------------------//
+
+  @OneToMany(() => Message, (messages) => messages.Sender, {
     onDelete: 'CASCADE',
   })
-  messages: Message[];
+  messagesSent: Message[];
+
+  @OneToMany(() => Message, (messages) => messages.Receiver, {
+    onDelete: 'CASCADE',
+  })
+  messagesReceived: Message[];
 }

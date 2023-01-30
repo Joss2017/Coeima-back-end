@@ -10,5 +10,6 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Authorization',
   });
   await app.listen(process.env.PORT);
+  console.log(`l'api est en route sur le port ${process.env.PORT} `);
 }
 bootstrap();
