@@ -1,8 +1,13 @@
 {
   "dependencies": {
+    "@nestjs/config": "^2.2.0",
+    "@nestjs/mapped-types": "*",
     "@nestjs/typeorm": "^9.0.1",
     "dotenv": "^16.0.3",
     "pg": "^8.9.0",
     "typeorm": "^0.3.11"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.18"
   }
 }
