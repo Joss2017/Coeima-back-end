@@ -1,4 +1,11 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateOfferDto } from './create-offer.dto';
 
-export class UpdateOfferDto extends PartialType(CreateOfferDto) {}
+//--- UPDATE Data Transfert Object modèle de conception utilisé pour transférer des données entre les couches---//
+
+export class UpdateOfferDto extends PartialType(CreateOfferDto) {
+    
+  title: string;
+  picture: string;
+  body: string;
+}
