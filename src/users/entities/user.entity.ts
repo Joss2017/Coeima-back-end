@@ -80,7 +80,7 @@ export class User {
   })
   comments: Comment[];
 
-  //----------------------liaison l'entité messages--------------------//
+  //--------------------------------------------liaison l'entité messages---------------------------------//
 
   @OneToMany(() => Message, (messages) => messages.Sender, {
     onDelete: 'CASCADE',

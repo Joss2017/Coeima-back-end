@@ -31,13 +31,13 @@ export class Message {
 
   @ManyToOne(() => User, (users) => users.messagesReceived, {
     onDelete: 'CASCADE',
-    nullable: false,
+    nullable: true,
   })
   Receiver: User;
 
   @ManyToOne(() => User, (users) => users.messagesSent, {
     onDelete: 'CASCADE',
-    nullable: false,
+    nullable: true,
   })
   Sender: User;
 }

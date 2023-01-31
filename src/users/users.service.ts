@@ -8,7 +8,7 @@ export class UsersService {
     return 'This action adds a new user';
   }
 
-  findAll() {
+  findAllUsers() {
     return `This action returns all users`;
   }
 

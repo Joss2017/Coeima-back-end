@@ -13,6 +13,7 @@ import { Topic } from './topics/entities/topic.entity';
 import { Offer } from './offers/entities/offer.entity';
 import { Message } from './messages/entities/message.entity';
 import { Comment } from './comments/entities/comment.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { Comment } from './comments/entities/comment.entity';
     TopicsModule,
     CommentsModule,
     MessagesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

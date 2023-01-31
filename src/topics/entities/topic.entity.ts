@@ -64,7 +64,7 @@ export class Topic {
   @OneToMany(() => Comment, (comments) => comments.topicId, {
     onDelete: 'CASCADE',
 
-    //----------------------Rattache les propriétés de l'entité à celle-ci--------------------//
+    //---------------------- true = récupére directement les éléments propriétés de l'entité à celle-ci-------------//
 
     eager: true,
   })
