@@ -3,6 +3,7 @@ import { Comment } from 'src/comments/entities/comment.entity';
 import {
   Column,
   CreateDateColumn,
+  Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -10,6 +11,7 @@ import {
 
 //----------Mise en place des différentes colommnes via type ORM  de l'entité topics----------//
 
+@Entity()
 export class Topic {
   //-------------------------------- génération de la clé primaire------------------------------------//
 
@@ -65,7 +67,6 @@ export class Topic {
     onDelete: 'CASCADE',
 
     //---------------------- true = récupére directement les éléments propriétés de l'entité à celle-ci-------------//
-
     eager: true,
   })
   comments: Comment[];

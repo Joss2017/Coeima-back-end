@@ -1,8 +1,9 @@
 import { User } from 'src/users/entities/user.entity';
-import { Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 //----------Mise en place des différentes colommnes via type ORM  de l'entité offers----------//
 
+@Entity()
 export class Offer {
   //-------------------------------- génération de la clé primaire------------------------------------//
 

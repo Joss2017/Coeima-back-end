@@ -7,10 +7,10 @@ import {
 import { CreateAuthDto } from './dto/create-auth.dto ';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +23,7 @@ export class AuthService {
   // -----------------------------------------------Méthode de création USER-------------------------------//
 
   async register(createUser: CreateAuthDto) {
-    const { email, password } = createUser;
+    const { password } = createUser;
 
     // -----------------------------------------------hashage du mot de passe-------------------------------//
 
@@ -33,7 +33,7 @@ export class AuthService {
     // -----------------------------------------------création d'une entité user----------------------------//
 
     const user = this.usersRepository.create({
-      email,
+      ...createUser,
       password: hashedPassword,
     });
 
@@ -44,9 +44,10 @@ export class AuthService {
       delete createdUser.password;
       return createdUser;
     } catch (error) {
-      // gestion des erreurs
+      //------------------------------------------- gestion des erreurs---------------------------------------//
+
       if (error.code === '23505') {
-        throw new ConflictException('username already exists');
+        throw new ConflictException('Cette utilisateur existe dejà');
       } else {
         throw new InternalServerErrorException();
       }

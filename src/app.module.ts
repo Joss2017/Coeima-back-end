@@ -14,6 +14,9 @@ import { Offer } from './offers/entities/offer.entity';
 import { Message } from './messages/entities/message.entity';
 import { Comment } from './comments/entities/comment.entity';
 import { AuthModule } from './auth/auth.module';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.local' });
 
 @Module({
   imports: [

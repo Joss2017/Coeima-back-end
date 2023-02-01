@@ -2,12 +2,14 @@ import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
+  Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 //----------Mise en place des différentes colommnes via type ORM  de l'entité topics----------//
 
+@Entity()
 export class Message {
   //-------------------------------- génération de la clé primaire------------------------------------//
 
@@ -33,11 +35,11 @@ export class Message {
     onDelete: 'CASCADE',
     nullable: true,
   })
-  Receiver: User;
+  receiver: User;
 
   @ManyToOne(() => User, (users) => users.messagesSent, {
     onDelete: 'CASCADE',
     nullable: true,
   })
-  Sender: User;
+  sender: User;
 }

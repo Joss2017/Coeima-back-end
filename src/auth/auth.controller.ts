@@ -10,8 +10,8 @@ export class AuthController {
   //------------------------------Ici la route vers service=>user crée son profil---------------------------------//
 
   @Post('register')
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.register(createAuthDto);
+  create(@Body() createUser: CreateAuthDto) {
+    return this.authService.register(createUser);
   }
 
   //------------------------------Ici la route vers service=>user connexion profil---------------------------------//

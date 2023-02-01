@@ -3,12 +3,14 @@ import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
+  Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 //---------------------Mise en place des différentes colommnes via type ORM de l'entité comments -----------//
 
+@Entity()
 export class Comment {
   //-------------------------------- génération de la clé primaire------------------------------------//
 
@@ -45,7 +47,6 @@ export class Comment {
 
   @ManyToOne(() => Topic, (topics) => topics.id, {
     onDelete: 'CASCADE',
-    eager: true,
   })
   topicId: Topic;
 }
