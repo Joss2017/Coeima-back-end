@@ -29,6 +29,7 @@ export class Topic {
     nullable: false,
     type: 'varchar',
     length: 50,
+    unique: true,
   })
   title: string;
 
@@ -51,7 +52,7 @@ export class Topic {
 
   @Column({
     default: false,
-    nullable: false,
+    nullable: true,
   })
   tag: boolean;
 

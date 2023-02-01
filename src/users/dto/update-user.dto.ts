@@ -16,20 +16,25 @@ import { RoleEnumType } from '../entities/user.entity';
 export class UpdateUserDto extends PartialType(CreateAuthDto) {
   role: RoleEnumType;
 
+  //--- Import de la class validator permettant de mettre des conditions données entrantes---//
+
   @IsString()
   @IsNotEmpty()
-  @MinLength(4)
-  @MaxLength(50)
+  @MinLength(4, {
+    message: 'la taille du pseudo doit être au minimum de 4 caractères',
+  })
+  @MaxLength(50, {
+    message: 'la taille du pseudo doit être au maximum de 50 caractères',
+  })
   nickname: string;
 
   @IsEmail()
-  @IsNotEmpty()
   email: string;
 
   @IsString()
   @IsNotEmpty()
   @MinLength(8, {
-    message: 'le mot de passe doit contenir au moins 8 caractères',
+    message: 'la taille du mot de passe doit être au minimum de 8 caractères',
   })
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message:
@@ -43,7 +48,4 @@ export class UpdateUserDto extends PartialType(CreateAuthDto) {
   @IsOptional()
   @MaxLength(10, { message: '10 chiffres maximum' })
   phone: string;
-
-  files: string;
-  legendFiles: string;
 }

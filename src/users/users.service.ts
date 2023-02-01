@@ -40,7 +40,7 @@ export class UsersService {
 
   //-------------------------------------------------Mettre à jour un user--------------------------------//
 
-  async updateUser(idValue: string, updateUser: UpdateUserDto, user: User) {
+  async updateUser(idValue: string, updateUserDto: UpdateUserDto, user: User) {
     //-------------------------Recherche du user dans la BDD -------------------//
 
     const updateUserFound = await this.usersRepository.findOneBy({
@@ -65,9 +65,9 @@ export class UsersService {
 
     //-----Destructuration de l'update afin de vérifier si doublon dans BDD ----//
 
-    const { email, nickname, password } = updateUser;
+    const { email, nickname, password } = updateUserDto;
 
-    console.log(updateUser.nickname);
+    console.log(updateUserDto.nickname);
     try {
       updateUserFound.email = email;
 
@@ -93,6 +93,7 @@ export class UsersService {
     const result = await this.usersRepository.delete({
       id,
     });
+    console.log('result', result);
     if (result.affected === 0) {
       throw new NotFoundException(`pas d'utilisateur trouvé avec l'id:${id}`);
     }
@@ -132,6 +133,16 @@ export class UsersService {
   //-------------------------------------------------------------------------------------------------------//
 
   //-------------------------------------------------Suppression d'un user- --------------------------------//
+
+  async removeByAdmin(id: string, user: User): Promise<User | string> {
+    const result = await this.usersRepository.delete({
+      id,
+    });
+    if (result.affected === 0) {
+      throw new NotFoundException(`pas d'utilisateur trouvé avec l'id:${id}`);
+    }
+    return `Cette action a supprimé l'utilisateur ${user}`;
+  }
 
   //-------------------------------------------------------------------------------------------------------//
 }
