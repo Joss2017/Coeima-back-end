@@ -1,4 +1,3 @@
-import { PartialType } from '@nestjs/mapped-types';
 import {
   IsEmail,
   IsNotEmpty,
@@ -8,12 +7,11 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { CreateAuthDto } from 'src/auth/dto/create-auth.dto ';
-import { RoleEnumType } from '../entities/user.entity';
+import { RoleEnumType } from 'src/users/entities/user.entity';
 
-//--- UPDATE Data Transfert Object modèle de conception utilisé pour transférer des données entre les couches---//
+// -----------------------------------Création du compte USER------------------------------//
 
-export class UpdateUserDto extends PartialType(CreateAuthDto) {
+export class CreateAuthDto {
   role: RoleEnumType;
 
   @IsString()
@@ -28,22 +26,15 @@ export class UpdateUserDto extends PartialType(CreateAuthDto) {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(8, {
-    message: 'le mot de passe doit contenir au moins 8 caractères',
-  })
+  @MinLength(8)
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
     message:
       'le mot de passe doit contenir 1 lettre minuscule, 1 lettre majuscule et 1 chiffre ou caractère spécial',
   })
   password: string;
 
-  hashedPassword: string;
-
   @IsString()
   @IsOptional()
   @MaxLength(10, { message: '10 chiffres maximum' })
   phone: string;
-
-  files: string;
-  legendFiles: string;
 }

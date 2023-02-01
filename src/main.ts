@@ -1,8 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.local' });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  //--------------------Permet d'utiliser class validator dans le projet Nest---------------------//
+  app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('api');
   app.enableCors({
     origin: '*',

@@ -2,7 +2,7 @@ import { Comment } from 'src/comments/entities/comment.entity';
 import { Message } from 'src/messages/entities/message.entity';
 import { Offer } from 'src/offers/entities/offer.entity';
 import { Topic } from 'src/topics/entities/topic.entity';
-import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 //--Mise en place des différentes colommnes via type ORM de l'entité users --role = Admin ou User défini par défaut--//
 
@@ -11,6 +11,7 @@ export enum RoleEnumType {
   ADMIN = 'admin',
 }
 
+@Entity()
 export class User {
   //-------------------------------- génération de la clé primaire------------------------------------//
 
@@ -29,6 +30,7 @@ export class User {
   @Column({
     nullable: false,
     type: 'varchar',
+    unique: true,
 
     //--------------------------------  par default length 255------------------------------------------//
 
@@ -39,6 +41,7 @@ export class User {
   @Column({
     nullable: false,
     type: 'varchar',
+    unique: true,
   })
   email: string;
 
@@ -51,7 +54,7 @@ export class User {
     nullable: true,
     length: 10,
   })
-  telephone: string;
+  phone: string;
 
   @Column({
     nullable: true,
@@ -80,14 +83,14 @@ export class User {
   })
   comments: Comment[];
 
-  //----------------------liaison l'entité messages--------------------//
+  //--------------------------------------------liaison l'entité messages---------------------------------//
 
-  @OneToMany(() => Message, (messages) => messages.Sender, {
+  @OneToMany(() => Message, (messages) => messages.sender, {
     onDelete: 'CASCADE',
   })
   messagesSent: Message[];
 
-  @OneToMany(() => Message, (messages) => messages.Receiver, {
+  @OneToMany(() => Message, (messages) => messages.receiver, {
     onDelete: 'CASCADE',
   })
   messagesReceived: Message[];
