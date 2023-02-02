@@ -8,19 +8,36 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { RoleEnumType, User } from './entities/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Controller('users')
 @UseGuards(AuthGuard())
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  //---------------------------------------------------ROUTES ROLE USER---------------------------------------------//
+  //---------------------------------------------------ROUTES---------------------------------------------//
 
-  //-----------------------------Route User voulant Update son compte-------------------------//
+  //-------------------------Admin voulant trouver tout les Users-------------------------//
+
+  @Get()
+  @UseGuards(RolesGuard)
+  @Roles(RoleEnumType.ADMIN)
+  findAllUsers(): Promise<User[]> {
+    return this.usersService.findAllUsersByAdmin();
+  }
+  //-------------------------Admin voulant trouver un User-------------------------------//
+  @Get()
+  @UseGuards(RolesGuard)
+  @Roles(RoleEnumType.ADMIN)
+  findUser(@Param('id') id: string, @GetUser() user: User): Promise<User> {
+    return this.usersService.findOneUserByAdmin(id, user);
+  }
+  //-----------------------------Route Updater son compte-------------------------//
 
   @Patch(':id')
   updateUser(
@@ -32,32 +49,10 @@ export class UsersController {
     return this.usersService.updateUser(id, updateUserDto, user);
   }
 
-  //-----------------------------Route User voulant Supprimer son compte-------------------------//
+  //-----------------------------Route  Suppression compte-------------------------//
 
   @Delete(':id')
   remove(@Param('id') id: string, @GetUser() user: User) {
     return this.usersService.remove(id, user);
-  }
-
-  //-----------------------------------------ROUTES ROLE ADMIN-------------------------------------------------//
-
-  //-------------------------Route Admin voulant trouver tout les Users-------------------------//
-
-  @Get()
-  findAllUsers() {
-    return this.usersService.findAllUsers();
-  }
-
-  //-------------------------Route Admin voulant trouver un User-------------------------------//
-
-  findOneUser(@Param('id') id: string, @GetUser() user: User): Promise<User> {
-    return this.usersService.findOneUser(id, user);
-  }
-
-  //-------------------------Route Admin voulant supprimer un User-----------------------------//
-
-  @Delete(':id')
-  removeByAdmin(@Param('id') id: string, @GetUser() user: User) {
-    return this.usersService.removeByAdmin(id, user);
   }
 }

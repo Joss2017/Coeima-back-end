@@ -28,7 +28,6 @@ export class Topic {
   @Column({
     nullable: false,
     type: 'varchar',
-    length: 50,
     unique: true,
   })
   title: string;

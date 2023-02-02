@@ -1,5 +1,6 @@
 import {
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -16,11 +17,19 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  //-------------------------------------------------METHODES-------------------------------------------------------//
+  //-------------------------------------------------SERVICES-------------------------------------------------------//
+
+  //------------------------------------------------------ADMIN-------------------------------------------//
+
+  //-------------------------------------------------Trouver tout les Users--------------------------------//
+
+  async findAllUsersByAdmin(): Promise<User[]> {
+    return await this.usersRepository.find();
+  }
 
   //-------------------------------------------------Trouver un User---------------------------------------//
 
-  async findUser(idValue: string, user: User): Promise<User> {
+  async findOneUserByAdmin(idValue: string, user: User): Promise<User> {
     try {
       const userFound = await this.usersRepository.findOneBy({
         id: idValue,
@@ -36,7 +45,7 @@ export class UsersService {
     }
   }
 
-  //-------------------------------------------------------------------------------------------------------//
+  //------------------------------------------------------User-------------------------------------------//
 
   //-------------------------------------------------Mettre à jour un user--------------------------------//
 
@@ -47,7 +56,7 @@ export class UsersService {
       id: idValue,
     });
     console.log('id requête utilisateur', idValue);
-    console.log('id utilisateur', user.id);
+    console.log('user trouvé', updateUserFound);
 
     //-------------------------Gestion erreur si pas de user dans la BDD -------//
 
@@ -63,29 +72,29 @@ export class UsersService {
       );
     }
 
-    //-----Destructuration de l'update afin de vérifier si doublon dans BDD ----//
+    //-----Destructuration de l'update afin de rehasher mot de passe ----//
 
-    const { email, nickname, password } = updateUserDto;
-
-    console.log(updateUserDto.nickname);
+    const { nickname, email, password, phone } = updateUserDto;
     try {
-      updateUserFound.email = email;
-
       if (password) {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
         updateUserFound.password = hashedPassword;
       }
-
-      updateUserFound.nickname = nickname;
-
+      if (nickname !== updateUserFound.nickname) {
+        updateUserFound.nickname = nickname;
+      }
+      if (email) {
+        updateUserFound.email = email;
+      }
+      if (phone !== updateUserFound.phone) {
+        updateUserFound.phone = phone;
+      }
       return await this.usersRepository.save(updateUserFound);
     } catch {
-      throw new Error("Autre erreur, merci de contacter l'administrateur");
+      throw new InternalServerErrorException();
     }
   }
-
-  //-------------------------------------------------------------------------------------------------------//
 
   //-------------------------------------------------Supprimer un user- -----------------------------------//
 
@@ -97,52 +106,7 @@ export class UsersService {
     if (result.affected === 0) {
       throw new NotFoundException(`pas d'utilisateur trouvé avec l'id:${id}`);
     }
-    return `Cette action a supprimé l'utilisateur ${user}`;
+    return `Cette action a supprimé l'utilisateur ${user.email}`;
   }
-
-  //-------------------------------------------------------------------------------------------------------//
-
-  //-----------------------------------------------------METHODES ADMIN-------------------------------------------//
-
-  //-------------------------------------------------Trouver tout les Users--------------------------------//
-
-  async findAllUsers(): Promise<User[]> {
-    return await this.usersRepository.find();
-  }
-
-  //-------------------------------------------------------------------------------------------------------//
-
-  //-------------------------------------------------Trouver un User---------------------------------------//
-
-  async findOneUser(idValue: string, user: User): Promise<User> {
-    try {
-      const userFound = await this.usersRepository.findOneBy({
-        id: idValue,
-      });
-      console.log('id utilisateur----------------', user.id);
-      return userFound;
-    } catch (error) {
-      if (error) {
-        throw new NotFoundException(
-          `pas d'utilisateur trouvé avec l'id:${idValue}`,
-        );
-      }
-    }
-  }
-
-  //-------------------------------------------------------------------------------------------------------//
-
-  //-------------------------------------------------Suppression d'un user- --------------------------------//
-
-  async removeByAdmin(id: string, user: User): Promise<User | string> {
-    const result = await this.usersRepository.delete({
-      id,
-    });
-    if (result.affected === 0) {
-      throw new NotFoundException(`pas d'utilisateur trouvé avec l'id:${id}`);
-    }
-    return `Cette action a supprimé l'utilisateur ${user}`;
-  }
-
   //-------------------------------------------------------------------------------------------------------//
 }

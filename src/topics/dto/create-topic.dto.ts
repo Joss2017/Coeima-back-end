@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsDataURI, IsNotEmpty, IsString } from 'class-validator';
 //--- POST Data Transfert Object modèle de conception utilisé pour transférer des données entre les couches---//
 
 export class CreateTopicDto {
@@ -10,6 +10,8 @@ export class CreateTopicDto {
 
   body: string;
 
+  @IsDataURI()
   url: string;
+
   tag: boolean;
 }

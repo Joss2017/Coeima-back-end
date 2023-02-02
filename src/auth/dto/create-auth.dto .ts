@@ -41,7 +41,6 @@ export class CreateAuthDto {
   password: string;
 
   @IsString()
-  @IsOptional()
   @MaxLength(10, { message: '10 chiffres maximum' })
   phone: string;
 }

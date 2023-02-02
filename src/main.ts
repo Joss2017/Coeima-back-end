@@ -7,7 +7,6 @@ dotenv.config({ path: '.env.local' });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   //--------------------Permet d'utiliser class validator dans le projet Nest---------------------//
   app.useGlobalPipes(new ValidationPipe());
 

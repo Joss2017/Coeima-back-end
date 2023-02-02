@@ -14,7 +14,7 @@ dotenv.config({ path: '.env.local' });
     TypeOrmModule.forFeature([User]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '4h' },
       secret: process.env.SECRET,
     }),
   ],
