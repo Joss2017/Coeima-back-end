@@ -41,6 +41,8 @@ export class User {
   @Column({
     nullable: false,
     type: 'varchar',
+    //--------------------------------propriété unique permets d'éviter doublon------------------------//
+
     unique: true,
   })
   email: string;

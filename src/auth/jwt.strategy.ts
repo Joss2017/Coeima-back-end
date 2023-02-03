@@ -1,12 +1,14 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PassportModule } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import * as dotenv from 'dotenv';
 
 //-----------------------------------Création de la méthode du JWT---------------------------------------------//
-
+dotenv.config({ path: '.env.local' });
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -14,15 +16,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private userRepository: Repository<User>,
   ) {
     super({
-      secretOrKey: 'justDevIt2023',
+      secretOrKey: process.env.SECRET,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
   }
 
   async validate(payload: any): Promise<User> {
     console.log('validate');
-    const { email } = payload;
-    const user: User = await this.userRepository.findOneBy({ email });
+    const { id } = payload;
+    const user: User = await this.userRepository.findOneBy({ id });
 
     if (!user) throw new UnauthorizedException();
     return user;

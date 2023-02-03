@@ -7,10 +7,13 @@ dotenv.config({ path: '.env.local' });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   //--------------------Permet d'utiliser class validator dans le projet Nest---------------------//
   app.useGlobalPipes(new ValidationPipe());
+
   app.setGlobalPrefix('api');
+
+  //--------------------Autorise les requêtes avec en-tête HTTP----------------------------------//
+
   app.enableCors({
     origin: '*',
     methods: 'GET, PUT, POST,PATCH, DELETE',

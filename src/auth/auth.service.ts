@@ -22,25 +22,29 @@ export class AuthService {
 
   // -----------------------------------------------Méthode de création USER-------------------------------//
 
-  async register(createUser: CreateAuthDto) {
-    const { password } = createUser;
-
+  async register(createUserDto: CreateAuthDto) {
+    const { nickname, email, password, phone, role } = createUserDto;
+    console.log('register', createUserDto);
     // -----------------------------------------------hashage du mot de passe-------------------------------//
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // -----------------------------------------------création d'une entité user----------------------------//
+    // -----------------------------------------------Injection TypeOrm d'un user----------------------------//
 
     const user = this.usersRepository.create({
-      ...createUser,
+      role,
+      nickname,
+      email,
       password: hashedPassword,
+      phone,
     });
-
+    console.log('user crée', user);
     //---------------------------------------------enregistrement de l'entité user---------------------------//
 
     try {
       const createdUser = await this.usersRepository.save(user);
+      console.log('user enregistré', user);
       delete createdUser.password;
       return createdUser;
     } catch (error) {
@@ -57,28 +61,31 @@ export class AuthService {
   // -----------------------------------------------Méthode de connexion USER-------------------------------//
 
   async login(loginDto: LoginAuthDto) {
-    const { role, nickname, email, password } = loginDto;
-    const user = await this.usersRepository.findOneBy({ email });
+    const { email, password } = loginDto;
+    const user = await this.usersRepository.findOneBy({
+      email,
+    });
 
-    console.log('je veux ton nom------------', nickname);
     console.log('je veux ton mail-----------', email);
     console.log('je veux ton mdp------------', password);
-    console.log('je veux ton role-----------', role);
+    console.log('je veux ton user------------', user);
 
     // ----------------------------------------Ici comparasaison du MP Hashé-------------------------------//
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload = { user };
-      console.log('je veux ton profil--------', user);
-
-      // ----------------------------------------Ici envoie du Token d'accés-------------------------------//
+      delete user.password;
+      const payload = {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      };
+      console.log('valeur du user dans payload', payload);
+      // ----------------------------------------Génération du token---------------------------------------//
 
       const accessToken = await this.jwtService.sign(payload);
       return { accessToken };
     } else {
-      throw new UnauthorizedException(
-        'Ces identifiants ne sont pas bons, déso...',
-      );
+      throw new UnauthorizedException('identifiants erronés');
     }
   }
 }

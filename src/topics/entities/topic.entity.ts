@@ -16,7 +16,7 @@ export class Topic {
   //-------------------------------- génération de la clé primaire------------------------------------//
 
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id: string;
 
   //-------------------------------- génération auto de la date---------------------------------------//
 
@@ -28,7 +28,7 @@ export class Topic {
   @Column({
     nullable: false,
     type: 'varchar',
-    length: 50,
+    unique: true,
   })
   title: string;
 
@@ -51,7 +51,7 @@ export class Topic {
 
   @Column({
     default: false,
-    nullable: false,
+    nullable: true,
   })
   tag: boolean;
 

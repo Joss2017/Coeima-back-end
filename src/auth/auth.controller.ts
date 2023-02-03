@@ -10,14 +10,14 @@ export class AuthController {
   //------------------------------Ici la route vers service=>user crée son profil---------------------------------//
 
   @Post('register')
-  create(@Body() createUser: CreateAuthDto) {
-    return this.authService.register(createUser);
+  create(@Body() createUserDto: CreateAuthDto) {
+    return this.authService.register(createUserDto);
   }
 
   //------------------------------Ici la route vers service=>user connexion profil---------------------------------//
 
   @Post('/login')
-  login(@Body() loginDto: LoginAuthDto): Promise<{ accessToken: string }> {
+  login(@Body() loginDto: LoginAuthDto) {
     return this.authService.login(loginDto);
   }
 }
