@@ -10,13 +10,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 
@@ -32,7 +32,7 @@ export class AuthService {
 
     // -----------------------------------------------Injection TypeOrm d'un user----------------------------//
 
-    const user = this.usersRepository.create({
+    const user = this.userRepository.create({
       role,
       nickname,
       email,
@@ -43,7 +43,7 @@ export class AuthService {
     //---------------------------------------------enregistrement de l'entité user---------------------------//
 
     try {
-      const createdUser = await this.usersRepository.save(user);
+      const createdUser = await this.userRepository.save(user);
       console.log('user enregistré', user);
       delete createdUser.password;
       return createdUser;
@@ -62,7 +62,7 @@ export class AuthService {
 
   async login(loginDto: LoginAuthDto) {
     const { email, password } = loginDto;
-    const user = await this.usersRepository.findOneBy({
+    const user = await this.userRepository.findOneBy({
       email,
     });
 

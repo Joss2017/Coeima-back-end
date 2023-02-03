@@ -3,18 +3,18 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/entities/user.entity';
-import { UsersModule } from './users/users.module';
-import { OffersModule } from './offers/offers.module';
-import { TopicsModule } from './topics/topics.module';
-import { CommentsModule } from './comments/comments.module';
-import { MessagesModule } from './messages/messages.module';
-import { Topic } from './topics/entities/topic.entity';
-import { Offer } from './offers/entities/offer.entity';
-import { Message } from './messages/entities/message.entity';
-import { Comment } from './comments/entities/comment.entity';
 import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
+import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
+import { OfferModule } from './offer/offer.module';
+import { Offer } from './offer/entities/offer.entity';
+import { TopicModule } from './topic/topic.module';
+import { Topic } from './topic/entities/topic.entity';
+import { CommentModule } from './comment/comment.module';
+import { Comment } from './comment/entities/comment.entity';
+import { MessageModule } from './message/message.module';
+import { Message } from './message/entities/message.entity';
 
 dotenv.config({ path: '.env.local' });
 
@@ -33,11 +33,11 @@ dotenv.config({ path: '.env.local' });
       entities: [User, Topic, Offer, Message, Comment],
       synchronize: process.env.MODE === 'DEV' ? true : false,
     }),
-    UsersModule,
-    OffersModule,
-    TopicsModule,
-    CommentsModule,
-    MessagesModule,
+    UserModule,
+    OfferModule,
+    TopicModule,
+    CommentModule,
+    MessageModule,
     AuthModule,
   ],
   controllers: [AppController],

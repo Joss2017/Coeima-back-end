@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { RoleEnumType } from 'src/users/entities/user.entity';
+import { RoleEnumType } from 'src/user/entities/user.entity';
 
 //-----------------------Début de la mise en place de sécurité d'un role (user, admin)---------------//
 
