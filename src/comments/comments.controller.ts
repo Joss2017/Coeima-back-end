@@ -29,13 +29,13 @@ export class CommentsController {
     return this.commentsService.findOne(+id);
   }
   @Post()
-  @UseGuards(AuthGuard())
+  // @UseGuards(AuthGuard())
   create(@Body() createCommentDto: CreateCommentDto) {
     return this.commentsService.create(createCommentDto);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard())
+  // @UseGuards(AuthGuard())
   update(
     @Param('id') id: string,
     @GetUser() user: User,
@@ -45,7 +45,7 @@ export class CommentsController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard())
+  // @UseGuards(AuthGuard())
   remove(@Param('id') id: string, @GetUser() user: User) {
     return this.commentsService.remove(+id);
   }

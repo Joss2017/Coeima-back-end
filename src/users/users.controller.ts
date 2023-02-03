@@ -30,13 +30,7 @@ export class UsersController {
   findAllUsers(): Promise<User[]> {
     return this.usersService.findAllUsersByAdmin();
   }
-  //-------------------------Admin voulant trouver un User-------------------------------//
-  @Get()
-  @UseGuards(RolesGuard)
-  @Roles(RoleEnumType.ADMIN)
-  findUser(@Param('id') id: string, @GetUser() user: User): Promise<User> {
-    return this.usersService.findOneUserByAdmin(id, user);
-  }
+
   //-----------------------------Route Updater son compte-------------------------//
 
   @Patch(':id')

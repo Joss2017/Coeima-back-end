@@ -30,25 +30,25 @@ export class OffersController {
     return this.offersService.findOne(+id);
   }
   @Post()
-  @UseGuards(AuthGuard())
-  @UseGuards(RolesGuard)
-  @Roles(RoleEnumType.ADMIN)
+  // @UseGuards(AuthGuard())
+  // @UseGuards(RolesGuard)
+  // @Roles(RoleEnumType.ADMIN)
   create(@Body() createOfferDto: CreateOfferDto) {
     return this.offersService.create(createOfferDto);
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard())
-  @UseGuards(RolesGuard)
-  @Roles(RoleEnumType.ADMIN)
+  // @UseGuards(AuthGuard())
+  // @UseGuards(RolesGuard)
+  // @Roles(RoleEnumType.ADMIN)
   update(@Param('id') id: string, @Body() updateOfferDto: UpdateOfferDto) {
     return this.offersService.update(+id, updateOfferDto);
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard())
-  @UseGuards(RolesGuard)
-  @Roles(RoleEnumType.ADMIN)
+  // @UseGuards(AuthGuard())
+  // @UseGuards(RolesGuard)
+  // @Roles(RoleEnumType.ADMIN)
   remove(@Param('id') id: string) {
     return this.offersService.remove(+id);
   }

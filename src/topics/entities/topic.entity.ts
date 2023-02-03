@@ -16,7 +16,7 @@ export class Topic {
   //-------------------------------- génération de la clé primaire------------------------------------//
 
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id: string;
 
   //-------------------------------- génération auto de la date---------------------------------------//
 

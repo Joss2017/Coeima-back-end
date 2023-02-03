@@ -1,6 +1,7 @@
 import {
   Body,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -49,15 +50,18 @@ export class TopicsService {
     @Body() createTopicDto: CreateTopicDto,
     @GetUser() user: User,
   ): Promise<Topic> {
+    const { title, body, url } = createTopicDto;
     const newTopic = await this.topicsRepository.create({
-      ...createTopicDto,
+      title,
+      body,
+      url,
       userId: user,
     });
+
     try {
-      const createdTopics = await this.topicsRepository.save(newTopic);
-      return createdTopics;
-    } catch {
-      throw new Error("Autre erreur, merci de contacter l'administrateur");
+      return await this.topicsRepository.save(newTopic);
+    } catch (error) {
+      throw new Error(`${error}, les données ne sont pas crées`);
     }
   }
 
@@ -68,9 +72,10 @@ export class TopicsService {
 
     const updateTopicsFound = await this.topicsRepository.findOneBy({
       id: idValue,
+      userId: user,
     });
-    console.log('id requête utilisateur', idValue);
-    console.log('id utilisateur', user.id);
+    console.log('id requête update topics', idValue);
+    console.log('id utilisateur upadate topics', user.id);
 
     //-------------------------Gestion erreur si pas de topic dans la BDD -------//
 
@@ -78,41 +83,43 @@ export class TopicsService {
       throw new NotFoundException("Ce sujet n'existe pas");
     }
 
-    //-------------------------Gestion erreur si  user pas autorisé -----------//
+    //-------------------------Gestion erreur si même valeur-----------//
 
-    if (updateTopicsFound.id !== user.id) {
-      throw new UnauthorizedException(
-        "Vous n'êtes pas autorisé à modifier ces informations",
-      );
+    if (updateTopicsFound.title === updateTopicDto.title) {
+      throw new Error('Erreur, le titre est le même que preceddment');
     }
-
-    //-----Destructuration de l'update afin de vérifier si doublon dans BDD ----//
-
+    if (updateTopicsFound.body === updateTopicDto.body) {
+      throw new Error('Erreur, le commentaire est le même que precedemment');
+    }
+    //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
     const { title, body } = updateTopicDto;
+    console.log('le titre du nouveau topic', title);
+    console.log('le titre du nouveau commentaire', body);
 
-    console.log(updateTopicDto.title);
-    try {
+    if (title) {
       updateTopicsFound.title = title;
-
+    }
+    if (body) {
       updateTopicsFound.body = body;
-
+    }
+    try {
       return await this.topicsRepository.save(updateTopicsFound);
-    } catch {
-      throw new Error("Autre erreur, merci de contacter l'administrateur");
+    } catch (error) {
+      throw new Error(`${error}, les données ne sont pas enregistrés`);
     }
   }
 
   // -----------------------------------------------Méthode delete TOPICS by Admin---------------------//
 
   async remove(id: string, user: User): Promise<Topic | string> {
-    const queryDelete = await this.topicsRepository.createQueryBuilder();
-    queryDelete.where({ id: id }).andWhere({ users: user });
-    const userFound = await queryDelete.getOne();
-    if (!userFound) {
-      throw new NotFoundException(`Pas de topics avec l'id: ${id}`);
-    } else {
-      await this.topicsRepository.delete({ id });
-      return 'topic supprimé';
+    const result = await this.topicsRepository.delete({
+      id,
+      userId: user,
+    });
+    console.log('résultat du delete par id', result);
+    if (result.affected === 0) {
+      throw new NotFoundException(`pas d'utilisateur trouvé avec l'id:${id}`);
     }
+    return `Cette action a supprimé le topic de l'utilisateur ${user.nickname}`;
   }
 }

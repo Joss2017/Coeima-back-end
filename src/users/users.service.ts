@@ -27,24 +27,6 @@ export class UsersService {
     return await this.usersRepository.find();
   }
 
-  //-------------------------------------------------Trouver un User---------------------------------------//
-
-  async findOneUserByAdmin(idValue: string, user: User): Promise<User> {
-    try {
-      const userFound = await this.usersRepository.findOneBy({
-        id: idValue,
-      });
-      console.log('id utilisateur----------------', user.id);
-      return userFound;
-    } catch (error) {
-      if (error) {
-        throw new NotFoundException(
-          `pas d'utilisateur trouvé avec l'id:${idValue}`,
-        );
-      }
-    }
-  }
-
   //------------------------------------------------------User-------------------------------------------//
 
   //-------------------------------------------------Mettre à jour un user--------------------------------//
@@ -55,7 +37,7 @@ export class UsersService {
     const updateUserFound = await this.usersRepository.findOneBy({
       id: idValue,
     });
-    console.log('id requête utilisateur', idValue);
+    console.log('id requête user pour update', idValue);
     console.log('user trouvé', updateUserFound);
 
     //-------------------------Gestion erreur si pas de user dans la BDD -------//
@@ -84,7 +66,7 @@ export class UsersService {
       if (nickname !== updateUserFound.nickname) {
         updateUserFound.nickname = nickname;
       }
-      if (email) {
+      if (email !== updateUserFound.email) {
         updateUserFound.email = email;
       }
       if (phone !== updateUserFound.phone) {
@@ -102,7 +84,7 @@ export class UsersService {
     const result = await this.usersRepository.delete({
       id,
     });
-    console.log('result', result);
+    console.log('résultat du delete par id', result);
     if (result.affected === 0) {
       throw new NotFoundException(`pas d'utilisateur trouvé avec l'id:${id}`);
     }
