@@ -70,17 +70,17 @@ export class User {
 
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//
 
-  @OneToMany(() => Offer, (offers) => offers.userId, {
+  @OneToMany(() => Offer, (offers) => offers.user, {
     onDelete: 'CASCADE',
   })
   offers: Offer[];
 
-  @OneToMany(() => Topic, (topics) => topics.userId, {
+  @OneToMany(() => Topic, (topics) => topics.user, {
     onDelete: 'CASCADE',
   })
   topics: Topic[];
 
-  @OneToMany(() => Comment, (comments) => comments.userId, {
+  @OneToMany(() => Comment, (comments) => comments.user, {
     onDelete: 'CASCADE',
   })
   comments: Comment[];

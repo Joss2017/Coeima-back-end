@@ -2,6 +2,6 @@
 
 export class CreateOfferDto {
   title: string;
-  picture: string;
   body: string;
+  picture: string;
 }

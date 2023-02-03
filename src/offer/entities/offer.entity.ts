@@ -14,6 +14,7 @@ export class Offer {
 
   @Column({
     nullable: false,
+    unique: true,
     type: 'varchar',
     length: 50,
   })
@@ -21,19 +22,19 @@ export class Offer {
 
   @Column({
     nullable: true,
-  })
-  picture: string;
-
-  @Column({
-    nullable: true,
     type: 'text',
   })
   body: string;
 
+  @Column({
+    nullable: true,
+  })
+  picture: string;
+
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//
-  @ManyToOne(() => User, (users) => users.id, {
+  @ManyToOne(() => User, (user) => user.offers, {
     onDelete: 'CASCADE',
     nullable: false,
   })
-  userId: User;
+  user: User;
 }

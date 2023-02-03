@@ -16,7 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { TopicService } from './topic.service';
 import { User } from 'src/user/entities/user.entity';
 
-@Controller('topics')
+@Controller('topic')
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
 
@@ -25,7 +25,7 @@ export class TopicController {
   //-------------------------Route afficher tout les topics-----------------------------//
 
   @Get()
-  findAll() {
+  findAll(): Promise<Topic[]> {
     return this.topicService.findAll();
   }
 
@@ -56,7 +56,7 @@ export class TopicController {
     @Param('id') id: string,
     @Body() updateTopicDto: UpdateTopicDto,
     @GetUser() user: User,
-  ) {
+  ): Promise<Topic> {
     return this.topicService.update(id, updateTopicDto, user);
   }
 

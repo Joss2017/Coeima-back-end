@@ -43,10 +43,10 @@ export class Comment {
     onDelete: 'CASCADE',
     eager: true,
   })
-  userId: User;
+  user: User;
 
   @ManyToOne(() => Topic, (topics) => topics.id, {
     onDelete: 'CASCADE',
   })
-  topicId: Topic;
+  topic: Topic;
 }

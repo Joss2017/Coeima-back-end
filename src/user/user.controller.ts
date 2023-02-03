@@ -15,14 +15,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 
-@Controller('users')
+@Controller('user')
 @UseGuards(AuthGuard())
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   //---------------------------------------------------ROUTES---------------------------------------------//
 
-  //-------------------------Admin voulant trouver tout les Users-------------------------//
+  //-------------------------Admin voulant afficher tout les Users-------------------------//
 
   @Get()
   @UseGuards(RolesGuard)
@@ -31,22 +31,22 @@ export class UserController {
     return this.userService.findAllUsersByAdmin();
   }
 
-  //-----------------------------Route Updater son compte-------------------------//
+  //-----------------------------Route Updater compte User-------------------------//
 
   @Patch(':id')
   updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
     @GetUser() user: User,
-  ) {
+  ): Promise<User> {
     console.log(user);
     return this.userService.updateUser(id, updateUserDto, user);
   }
 
-  //-----------------------------Route  Suppression compte-------------------------//
+  //-----------------------------Route  Suppression compte User-------------------------//
 
   @Delete(':id')
-  remove(@Param('id') id: string, @GetUser() user: User) {
+  remove(@Param('id') id: string, @GetUser() user: User): Promise<string> {
     return this.userService.remove(id, user);
   }
 }

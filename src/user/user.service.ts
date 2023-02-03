@@ -17,38 +17,32 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  //-------------------------------------------------SERVICES-------------------------------------------------------//
-
-  //------------------------------------------------------ADMIN-------------------------------------------//
-
   //-------------------------------------------------Trouver tout les Users--------------------------------//
 
-  async findAllUsersByAdmin(): Promise<User[]> {
+  async findAllUsersByAdmin() {
     return await this.userRepository.find();
   }
-
-  //------------------------------------------------------User-------------------------------------------//
 
   //-------------------------------------------------Mettre à jour un user--------------------------------//
 
   async updateUser(idValue: string, updateUserDto: UpdateUserDto, user: User) {
     //-------------------------Recherche du user dans la BDD -------------------//
 
-    const updateUserFound = await this.userRepository.findOneBy({
+    const userFound = await this.userRepository.findOneBy({
       id: idValue,
     });
     console.log('id requête user pour update', idValue);
-    console.log('user trouvé', updateUserFound);
+    console.log('user trouvé', userFound);
 
     //-------------------------Gestion erreur si pas de user dans la BDD -------//
 
-    if (!updateUserFound) {
+    if (!userFound) {
       throw new NotFoundException("Cette utilisateur n'existe pas");
     }
 
     //-------------------------Gestion erreur si  user pas autorisé -----------//
 
-    if (updateUserFound.id !== user.id) {
+    if (userFound.id !== user.id && user.role !== 'admin') {
       throw new UnauthorizedException(
         "Vous n'êtes pas autorisé à modifier ces informations",
       );
@@ -61,18 +55,18 @@ export class UserService {
       if (password) {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
-        updateUserFound.password = hashedPassword;
+        userFound.password = hashedPassword;
       }
-      if (nickname !== updateUserFound.nickname) {
-        updateUserFound.nickname = nickname;
+      if (nickname !== userFound.nickname) {
+        userFound.nickname = nickname;
       }
-      if (email !== updateUserFound.email) {
-        updateUserFound.email = email;
+      if (email !== userFound.email) {
+        userFound.email = email;
       }
-      if (phone !== updateUserFound.phone) {
-        updateUserFound.phone = phone;
+      if (phone !== userFound.phone) {
+        userFound.phone = phone;
       }
-      return await this.userRepository.save(updateUserFound);
+      return await this.userRepository.save(userFound);
     } catch {
       throw new InternalServerErrorException();
     }
@@ -80,15 +74,35 @@ export class UserService {
 
   //-------------------------------------------------Supprimer un user- -----------------------------------//
 
-  async remove(id: string, user: User): Promise<User | string> {
-    const result = await this.userRepository.delete({
+  async remove(id: string, user: User) {
+    const userFound = await this.userRepository.findOneBy({
       id,
     });
-    console.log('résultat du delete par id', result);
-    if (result.affected === 0) {
-      throw new NotFoundException(`pas d'utilisateur trouvé avec l'id:${id}`);
+    console.log('id requête user pour update', id);
+    console.log('user trouvé', userFound);
+
+    //-------------------------Gestion erreur si pas de user dans la BDD -------//
+
+    if (!userFound) {
+      throw new NotFoundException("Cette utilisateur n'existe pas");
     }
-    return `Cette action a supprimé l'utilisateur ${user.email}`;
+    //-------------------------Gestion erreur si  user pas autorisé -----------//
+
+    if (userFound.id !== user.id && user.role !== 'admin') {
+      throw new UnauthorizedException(
+        "Vous n'êtes pas autorisé à modifier ces informations",
+      );
+    }
+    try {
+      const result = await this.userRepository.delete({
+        id,
+      });
+      console.log('valeur du result par id', result);
+      if (result.affected !== 0) {
+        return `Cette action a supprimé l'utilisateur ${user.nickname}`;
+      }
+    } catch (error) {
+      throw new error(`Impossible de supprimer le user ${error}`);
+    }
   }
-  //-------------------------------------------------------------------------------------------------------//
 }
