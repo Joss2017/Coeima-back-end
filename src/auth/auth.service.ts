@@ -32,19 +32,19 @@ export class AuthService {
 
     // -----------------------------------------------Injection TypeOrm d'un user----------------------------//
 
-    const user = this.userRepository.create({
+    const newUser = this.userRepository.create({
       role,
       nickname,
       email,
       password: hashedPassword,
       phone,
     });
-    console.log('user crée', user);
+    console.log('user crée', newUser);
     //---------------------------------------------enregistrement de l'entité user---------------------------//
 
     try {
-      const createdUser = await this.userRepository.save(user);
-      console.log('user enregistré', user);
+      const createdUser = await this.userRepository.save(newUser);
+      console.log('user enregistré', newUser);
       delete createdUser.password;
       return createdUser;
     } catch (error) {
@@ -62,22 +62,22 @@ export class AuthService {
 
   async login(loginDto: LoginAuthDto) {
     const { email, password } = loginDto;
-    const user = await this.userRepository.findOneBy({
+    const userFound = await this.userRepository.findOneBy({
       email,
     });
 
     console.log('je veux ton mail-----------', email);
     console.log('je veux ton mdp------------', password);
-    console.log('je veux ton user------------', user);
+    console.log('je veux ton user------------', userFound);
 
     // ----------------------------------------Ici comparasaison du MP Hashé-------------------------------//
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      delete user.password;
+    if (userFound && (await bcrypt.compare(password, userFound.password))) {
+      delete userFound.password;
       const payload = {
-        id: user.id,
-        email: user.email,
-        role: user.role,
+        id: userFound.id,
+        email: userFound.email,
+        role: userFound.role,
       };
       console.log('valeur du user dans payload', payload);
       // ----------------------------------------Génération du token---------------------------------------//

@@ -39,7 +39,7 @@ export class OfferController {
   //-------------------------Route créer un OFFER--------------------------------------//
 
   @Post()
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard(), RolesGuard)
   @Roles(RoleEnumType.ADMIN)
   create(
     @Body() createOfferDto: CreateOfferDto,
@@ -51,7 +51,7 @@ export class OfferController {
   //-------------------------Route update un OFFER--------------------------------------//
 
   @Patch(':id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard(), RolesGuard)
   @Roles(RoleEnumType.ADMIN)
   update(
     @Param('id') id: string,
@@ -64,12 +64,9 @@ export class OfferController {
   //-------------------------Route delete un OFFER--------------------------------------//
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard(), RolesGuard)
   @Roles(RoleEnumType.ADMIN)
-  remove(
-    @Param('id') id: string,
-    @GetUser() user: User,
-  ): Promise<Offer | string> {
-    return this.offerService.remove(id, user);
+  remove(@Param('id') id: string): Promise<Offer | string> {
+    return this.offerService.remove(id);
   }
 }

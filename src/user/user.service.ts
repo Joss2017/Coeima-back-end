@@ -1,6 +1,5 @@
 import {
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -25,24 +24,31 @@ export class UserService {
 
   //-------------------------------------------------Mettre à jour un user--------------------------------//
 
-  async updateUser(idValue: string, updateUserDto: UpdateUserDto, user: User) {
+  async updateUser(
+    idValue: string,
+    updateUserDto: UpdateUserDto,
+    connectedUser: User,
+  ) {
     //-------------------------Recherche du user dans la BDD -------------------//
 
-    const userFound = await this.userRepository.findOneBy({
+    const oneUserFound = await this.userRepository.findOneBy({
       id: idValue,
     });
-    console.log('id requête user pour update', idValue);
-    console.log('user trouvé', userFound);
+    console.log('connectedUser requete update user', connectedUser);
+    console.log('user trouvé', oneUserFound);
 
     //-------------------------Gestion erreur si pas de user dans la BDD -------//
 
-    if (!userFound) {
+    if (!oneUserFound) {
       throw new NotFoundException("Cette utilisateur n'existe pas");
     }
 
     //-------------------------Gestion erreur si  user pas autorisé -----------//
 
-    if (userFound.id !== user.id && user.role !== 'admin') {
+    if (
+      oneUserFound.id !== connectedUser.id &&
+      connectedUser.role !== 'admin'
+    ) {
       throw new UnauthorizedException(
         "Vous n'êtes pas autorisé à modifier ces informations",
       );
@@ -55,54 +61,59 @@ export class UserService {
       if (password) {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
-        userFound.password = hashedPassword;
+        oneUserFound.password = hashedPassword;
       }
-      if (nickname !== userFound.nickname) {
-        userFound.nickname = nickname;
+      if (nickname !== oneUserFound.nickname) {
+        oneUserFound.nickname = nickname;
       }
-      if (email !== userFound.email) {
-        userFound.email = email;
+      if (email !== oneUserFound.email) {
+        oneUserFound.email = email;
       }
-      if (phone !== userFound.phone) {
-        userFound.phone = phone;
+      if (phone !== oneUserFound.phone) {
+        oneUserFound.phone = phone;
       }
-      return await this.userRepository.save(userFound);
-    } catch {
-      throw new InternalServerErrorException();
+      return await this.userRepository.save(oneUserFound);
+    } catch (error) {
+      ('les mises à jour ne sont pas prises en compte');
+      console.log(error);
     }
   }
 
   //-------------------------------------------------Supprimer un user- -----------------------------------//
 
-  async remove(id: string, user: User) {
-    const userFound = await this.userRepository.findOneBy({
-      id,
+  async remove(idValue: string, connectedUser: User) {
+    const oneUserFound = await this.userRepository.findOneBy({
+      id: idValue,
     });
-    console.log('id requête user pour update', id);
-    console.log('user trouvé', userFound);
+    console.log('connectedUser requete remove user', connectedUser);
+    console.log('user trouvé', oneUserFound);
 
     //-------------------------Gestion erreur si pas de user dans la BDD -------//
 
-    if (!userFound) {
+    if (!oneUserFound) {
       throw new NotFoundException("Cette utilisateur n'existe pas");
     }
     //-------------------------Gestion erreur si  user pas autorisé -----------//
 
-    if (userFound.id !== user.id && user.role !== 'admin') {
+    if (
+      oneUserFound.id !== connectedUser.id &&
+      connectedUser.role !== 'admin'
+    ) {
       throw new UnauthorizedException(
         "Vous n'êtes pas autorisé à modifier ces informations",
       );
     }
     try {
       const result = await this.userRepository.delete({
-        id,
+        id: idValue,
       });
       console.log('valeur du result par id', result);
       if (result.affected !== 0) {
-        return `Cette action a supprimé l'utilisateur ${user.nickname}`;
+        return `Cette action a supprimé l'utilisateur ${oneUserFound.nickname}`;
       }
     } catch (error) {
-      throw new error(`Impossible de supprimer le user ${error}`);
+      ('Impossible de supprimer le user ');
+      console.log(error);
     }
   }
 }

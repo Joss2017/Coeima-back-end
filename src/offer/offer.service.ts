@@ -16,60 +16,62 @@ export class OfferService {
   // -----------------------------------------------Méthode afficher tout les OFFERS-----------------//
 
   async findAllOffers() {
-    const offerFound = await this.offerRepository.find();
-    if (!offerFound) {
+    const allOffersFound = await this.offerRepository.find();
+    if (!allOffersFound) {
       throw new NotFoundException(`offres non trouvée`);
     }
-    return offerFound;
+    return allOffersFound;
   }
 
   // -----------------------------------------------Méthode afficher un OFFER------------------------//
 
   async findOne(idValue: string) {
     try {
-      const offerFound = await this.offerRepository.findOneBy({
+      const oneOfferFound = await this.offerRepository.findOneBy({
         id: idValue,
       });
-      console.log('id du offer----------------', idValue);
-      return offerFound;
+      console.log('id du offer trouvé', oneOfferFound);
+      return oneOfferFound;
     } catch (error) {
-      if (error) {
-        throw new NotFoundException(`pas de sujet trouvé avec l'id:${idValue}`);
-      }
+      throw new NotFoundException(`pas de sujet trouvé avec l'id:${idValue}`);
     }
   }
 
   // -----------------------------------------------Méthode créer un OFFER---------------------------//
 
-  async create(createOfferDto: CreateOfferDto, user: User) {
+  async create(createOfferDto: CreateOfferDto, connectedUser: User) {
     const { title, body, picture } = createOfferDto;
     const newOffer = await this.offerRepository.create({
       title,
       body,
       picture,
-      user,
+      user: connectedUser,
     });
     console.log('création newOffer-------- ', newOffer);
-    console.log('création newOffer-------- ', user);
 
     try {
       return await this.offerRepository.save(newOffer);
     } catch (error) {
-      throw new Error(`${error}, les données ne sont pas crées`);
+      ` les données ne sont pas crées`;
+      console.log(error);
     }
   }
 
   // -----------------------------------------------Méthode update un OFFER---------------------------//
 
-  async update(idValue: string, updateOfferDto: UpdateOfferDto, user: User) {
+  async update(
+    idValue: string,
+    updateOfferDto: UpdateOfferDto,
+    connectedUser: User,
+  ) {
     //-------------------------Recherche topics dans la BDD -------------------//
 
     const offerFound = await this.offerRepository.findOneBy({
       id: idValue,
-      user,
+      user: connectedUser,
     });
-    console.log('id requête update offer', idValue);
-    console.log('id utilisateur upadate offer', user.id);
+    console.log(' user requête update offer', connectedUser);
+    console.log(' offerFound trouvé', offerFound);
 
     //-------------------------Gestion erreur si pas de topic dans la BDD -------//
 
@@ -97,21 +99,35 @@ export class OfferService {
     try {
       return await this.offerRepository.save(offerFound);
     } catch (error) {
-      throw new Error(`${error}, les données ne sont pas mises à jour`);
+      ` les données ne sont pas mises à jour`;
+      console.log(error);
     }
   }
 
   // -----------------------------------------------Méthode delete un OFFER---------------------------//
 
-  async remove(id: string, user: User) {
-    const result = await this.offerRepository.delete({
-      id,
-      user: user,
+  async remove(idValue: string) {
+    const oneOfferFound = await this.offerRepository.findOneBy({
+      id: idValue,
     });
-    console.log('valeur affected de result offer remove', result.affected);
-    if (result.affected === 0) {
-      throw new NotFoundException(`pas d'utilisateur trouvé avec l'id:${id}`);
+    console.log('topic trouvé', oneOfferFound);
+
+    //-------------------------Gestion erreur si pas de offer dans la BDD -------//
+
+    if (!oneOfferFound) {
+      throw new NotFoundException("Ce topic n'existe pas");
     }
-    return `Cette action a supprimé le topic de l'utilisateur ${user.nickname}`;
+    try {
+      const result = await this.offerRepository.delete({
+        id: idValue,
+      });
+      console.log('valeur du result par id', result);
+      if (result.affected !== 0) {
+        return `Cette action a supprimé ton offre de service dont le titre était ${oneOfferFound.title}`;
+      }
+    } catch (error) {
+      `Impossible de supprimer ton offre de service `;
+      console.log(error);
+    }
   }
 }

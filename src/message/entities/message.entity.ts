@@ -24,22 +24,19 @@ export class Message {
   //-------------------------------- génération des colonnes-------------------------------------------//
 
   @Column({
-    nullable: true,
+    nullable: false,
     type: 'text',
   })
   body: string;
 
   //----------------------liaison 2 clés étrangères sender/receiver avec l'entité users--------------------//
 
-  @ManyToOne(() => User, (users) => users.messagesReceived, {
+  @ManyToOne(() => User, (user) => user.messagesReceived, {
     onDelete: 'CASCADE',
-    nullable: true,
   })
   receiver: User;
-
-  @ManyToOne(() => User, (users) => users.messagesSent, {
+  @ManyToOne(() => User, (user) => user.messagesSent, {
     onDelete: 'CASCADE',
-    nullable: true,
   })
   sender: User;
 }

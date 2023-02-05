@@ -61,8 +61,6 @@ export class Topic {
     nullable: false,
     onDelete: 'CASCADE',
   })
-  user: User;
-
   @OneToMany(() => Comment, (comments) => comments.topic, {
     onDelete: 'CASCADE',
 
@@ -70,4 +68,5 @@ export class Topic {
     eager: true,
   })
   comments: Comment[];
+  user: any;
 }

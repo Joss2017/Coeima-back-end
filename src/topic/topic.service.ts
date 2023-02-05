@@ -20,56 +20,62 @@ export class TopicService {
   // -----------------------------------------------Méthode afficher tout les TOPICS------------------------//
 
   async findAll() {
-    const topicFound = await this.topicRepository.find();
-    if (!topicFound) {
+    const allTopicsFound: Topic[] = await this.topicRepository.find();
+    console.log('topics trouvés', allTopicsFound);
+    if (!allTopicsFound) {
       throw new NotFoundException(`Topics non trouvée`);
     }
-    return topicFound;
+
+    return allTopicsFound;
   }
   // -----------------------------------------------Méthode afficher un TOPIC-------------------------------//
 
   async findOne(idValue: string) {
     try {
-      const topicFound = await this.topicRepository.findOneBy({
+      const oneTopicFound = await this.topicRepository.findOneBy({
         id: idValue,
       });
-      console.log('id du topic----------------', idValue);
-      return topicFound;
+      console.log('id du topic trouvé----------------', idValue);
+      return oneTopicFound;
     } catch (error) {
-      if (error) {
-        throw new NotFoundException(`pas de sujet trouvé avec l'id:${idValue}`);
-      }
+      `pas de sujet trouvé avec l'id:${idValue}`;
+      console.log(error);
     }
   }
   // -----------------------------------------------Méthode de création TOPICS-------------------------------//
 
-  async create(createTopicDto: CreateTopicDto, user: User) {
+  async create(createTopicDto: CreateTopicDto, connectedUser: User) {
     const { title, body, url } = createTopicDto;
     const newTopic = await this.topicRepository.create({
       title,
       body,
       url,
-      user,
+      user: connectedUser,
     });
     console.log('création newTopic-------- ', newTopic);
     try {
       return await this.topicRepository.save(newTopic);
     } catch (error) {
-      throw new Error(`${error}, les données ne sont pas crées`);
+      `les données ne sont pas crées`;
+      console.log(error);
     }
   }
 
   // -----------------------------------------------Méthode update TOPICS-------------------------------//
 
-  async update(idValue: string, updateTopicDto: UpdateTopicDto, user: User) {
+  async update(
+    idValue: string,
+    updateTopicDto: UpdateTopicDto,
+    connectedUser: User,
+  ) {
     //-------------------------Recherche topics dans la BDD -------------------//
 
     const topicFound = await this.topicRepository.findOneBy({
       id: idValue,
-      user,
+      user: connectedUser,
     });
-    console.log('id requête update topics', idValue);
-    console.log('id utilisateur upadate topics', user.id);
+    console.log('connectedUser requete remove user', connectedUser);
+    console.log(' topic trouvé', topicFound);
 
     //-------------------------Gestion erreur si pas de topic dans la BDD -------//
 
@@ -79,7 +85,7 @@ export class TopicService {
 
     //-------------------------Gestion erreur si  user pas autorisé -----------//
 
-    if (topicFound.id !== user.id && user.role !== 'admin') {
+    if (topicFound.id !== connectedUser.id && connectedUser.role !== 'admin') {
       throw new UnauthorizedException(
         "Vous n'êtes pas autorisé à modifier ces informations",
       );
@@ -107,41 +113,46 @@ export class TopicService {
     try {
       return await this.topicRepository.save(topicFound);
     } catch (error) {
-      throw new Error(`${error}, les données ne sont pas enregistrés`);
+      ` les données ne sont pas enregistrés`;
+      console.log(error);
     }
   }
 
   // -----------------------------------------------Méthode delete TOPICS by Admin---------------------//
 
-  async remove(id: string, user: User) {
-    const topicFound = await this.topicRepository.findOneBy({
-      id,
+  async remove(idValue: string, connectedUser: User) {
+    const oneTopicFound = await this.topicRepository.findOneBy({
+      id: idValue,
     });
-    console.log('id requête user pour topic', id);
-    console.log('topic trouvé', topicFound);
+    console.log('connectedUser remove topic', connectedUser);
+    console.log('topic trouvé', oneTopicFound);
 
     //-------------------------Gestion erreur si pas de topic dans la BDD -------//
 
-    if (!topicFound) {
+    if (!oneTopicFound) {
       throw new NotFoundException("Ce topic n'existe pas");
     }
     //-------------------------Gestion erreur si  user pas autorisé -----------//
 
-    if (topicFound.id !== user.id && user.role !== 'admin') {
+    if (
+      oneTopicFound.id !== connectedUser.id &&
+      connectedUser.role !== 'admin'
+    ) {
       throw new UnauthorizedException(
         "Vous n'êtes pas autorisé à modifier ces informations",
       );
     }
     try {
       const result = await this.topicRepository.delete({
-        id,
+        id: idValue,
       });
       console.log('valeur du result par id', result);
       if (result.affected !== 0) {
-        return `Cette action a supprimé dont le titre était ${topicFound.title}`;
+        return `Cette action a supprimé le post du forum dont le titre était ${oneTopicFound.title}`;
       }
     } catch (error) {
-      throw new error(`Impossible de supprimer le user ${error}`);
+      `Impossible de supprimer le user`;
+      console.log(error);
     }
   }
 }
