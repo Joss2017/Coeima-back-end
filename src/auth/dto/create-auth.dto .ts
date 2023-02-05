@@ -1,13 +1,13 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsOptional,
+  IsNumberString,
   IsString,
   Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { RoleEnumType } from 'src/users/entities/user.entity';
+import { RoleEnumType } from 'src/user/entities/user.entity';
 
 // -----------------------------------Création du compte USER------------------------------//
 
@@ -40,7 +40,7 @@ export class CreateAuthDto {
   })
   password: string;
 
-  @IsString()
+  @IsNumberString()
   @MaxLength(10, { message: '10 chiffres maximum' })
   phone: string;
 }
