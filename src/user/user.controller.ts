@@ -35,18 +35,17 @@ export class UserController {
 
   @Patch(':id')
   updateUser(
-    @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-    @GetUser() user: User,
+    @GetUser() connectedUser: User,
   ): Promise<User> {
-    console.log(user);
-    return this.userService.updateUser(id, updateUserDto, user);
+    console.log(connectedUser);
+    return this.userService.updateUser(updateUserDto, connectedUser);
   }
 
   //-----------------------------Route  Suppression compte User-------------------------//
 
-  @Delete(':id')
-  remove(@Param('id') id: string, @GetUser() user: User): Promise<string> {
-    return this.userService.remove(id, user);
+  @Delete()
+  remove(@Param('id') idValue: string, @GetUser() user: User): Promise<string> {
+    return this.userService.remove(idValue, user);
   }
 }

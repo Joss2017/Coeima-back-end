@@ -20,44 +20,42 @@ import { User } from 'src/user/entities/user.entity';
 export class TopicController {
   constructor(private readonly topicService: TopicService) {}
 
-  //---------------------------------------------------ROUTES ROLE USER/ADMIN-----------------------------------//
-
-  //-------------------------Route afficher tout les topics-----------------------------//
+  //-------------------------Route afficher tout les TOPICS-----------------------------//
 
   @Get()
   findAll(): Promise<Topic[]> {
     return this.topicService.findAll();
   }
 
-  //-------------------------Route afficher un Topic-----------------------------//
+  //-------------------------Route afficher un TOPIC-----------------------------//
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Topic> {
-    return this.topicService.findOne(id);
+  findOne(@Param('id') idValue: string): Promise<Topic> {
+    return this.topicService.findOne(idValue);
   }
 
-  //-------------------------Route créer un Topic-----------------------------//
+  //-------------------------Route créer un TOPIC-----------------------------//
 
   @Post()
   @UseGuards(AuthGuard())
   create(
     @Body()
     createTopicDto: CreateTopicDto,
-    @GetUser() user: User,
+    @GetUser() connectedUser: User,
   ): Promise<Topic> {
-    return this.topicService.create(createTopicDto, user);
+    return this.topicService.create(createTopicDto, connectedUser);
   }
 
-  //-------------------------Route update un Topic-----------------------------//
+  //-------------------------Route update un TOPIC-----------------------------//
 
   @Patch(':id')
   @UseGuards(AuthGuard())
   update(
-    @Param('id') id: string,
+    @Param('id') idValue: string,
     @Body() updateTopicDto: UpdateTopicDto,
-    @GetUser() user: User,
+    @GetUser() connectedUser: User,
   ): Promise<Topic> {
-    return this.topicService.update(id, updateTopicDto, user);
+    return this.topicService.update(idValue, updateTopicDto, connectedUser);
   }
 
   //-------------------------Route supprimer un Topic-----------------------------//
@@ -65,9 +63,9 @@ export class TopicController {
   @Delete(':id')
   @UseGuards(AuthGuard())
   remove(
-    @Param('id') id: string,
-    @GetUser() user: User,
+    @Param('id') idValue: string,
+    @GetUser() connectedUser: User,
   ): Promise<string | Topic> {
-    return this.topicService.remove(id, user);
+    return this.topicService.remove(idValue, connectedUser);
   }
 }

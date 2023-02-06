@@ -35,14 +35,14 @@ export class TopicService {
       const oneTopicFound = await this.topicRepository.findOneBy({
         id: idValue,
       });
-      console.log('id du topic trouvé----------------', idValue);
+      console.log('topic trouvé----------------', oneTopicFound);
       return oneTopicFound;
     } catch (error) {
       `pas de sujet trouvé avec l'id:${idValue}`;
       console.log(error);
     }
   }
-  // -----------------------------------------------Méthode de création TOPICS-------------------------------//
+  // -----------------------------------------------Méthode de création TOPIC-------------------------------//
 
   async create(createTopicDto: CreateTopicDto, connectedUser: User) {
     const { title, body, url } = createTopicDto;
@@ -50,7 +50,7 @@ export class TopicService {
       title,
       body,
       url,
-      user: connectedUser,
+      createdBy: connectedUser,
     });
     console.log('création newTopic-------- ', newTopic);
     try {
@@ -70,48 +70,47 @@ export class TopicService {
   ) {
     //-------------------------Recherche topics dans la BDD -------------------//
 
-    const topicFound = await this.topicRepository.findOneBy({
+    const oneTopicFound = await this.topicRepository.findOneBy({
       id: idValue,
-      user: connectedUser,
     });
-    console.log('connectedUser requete remove user', connectedUser);
-    console.log(' topic trouvé', topicFound);
+    console.log('connectedUser update topic', connectedUser);
+    console.log('topic trouvé', oneTopicFound);
 
     //-------------------------Gestion erreur si pas de topic dans la BDD -------//
 
-    if (!topicFound) {
-      throw new NotFoundException("Ce sujet n'existe pas");
+    if (!oneTopicFound) {
+      throw new NotFoundException("Ce topic n'existe pas");
     }
-
     //-------------------------Gestion erreur si  user pas autorisé -----------//
 
-    if (topicFound.id !== connectedUser.id && connectedUser.role !== 'admin') {
+    if (
+      oneTopicFound.createdBy.id !== connectedUser.id &&
+      connectedUser.role !== 'admin'
+    ) {
       throw new UnauthorizedException(
         "Vous n'êtes pas autorisé à modifier ces informations",
       );
     }
+    console.log('Valeur de topicFound.user', oneTopicFound);
 
+    //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
+
+    const { title, body } = updateTopicDto;
     //-------------------------Gestion erreur si même valeur-----------//
 
-    if (topicFound.title === updateTopicDto.title) {
-      throw new Error('Erreur, le titre est le même que precedemment');
-    }
-    if (topicFound.body === updateTopicDto.body) {
+    if (oneTopicFound.body === body) {
       throw new Error('Erreur, le commentaire est le même que precedemment');
     }
-    //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
-    const { title, body } = updateTopicDto;
-    console.log('le titre du nouveau topic', title);
     console.log('le titre du nouveau commentaire', body);
 
     if (title) {
-      topicFound.title = title;
+      oneTopicFound.title = title;
     }
     if (body) {
-      topicFound.body = body;
+      oneTopicFound.body = body;
     }
     try {
-      return await this.topicRepository.save(topicFound);
+      return await this.topicRepository.save(oneTopicFound);
     } catch (error) {
       ` les données ne sont pas enregistrés`;
       console.log(error);
@@ -133,9 +132,9 @@ export class TopicService {
       throw new NotFoundException("Ce topic n'existe pas");
     }
     //-------------------------Gestion erreur si  user pas autorisé -----------//
-
+    // const topicTrouver = { ...oneTopicFound.createdBy.id };
     if (
-      oneTopicFound.id !== connectedUser.id &&
+      oneTopicFound.createdBy.id !== connectedUser.id ||
       connectedUser.role !== 'admin'
     ) {
       throw new UnauthorizedException(

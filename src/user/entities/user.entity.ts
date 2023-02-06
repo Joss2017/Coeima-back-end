@@ -75,12 +75,13 @@ export class User {
   })
   offers: Offer[];
 
-  @OneToMany(() => Topic, (topics) => topics.user, {
+  @OneToMany(() => Topic, (topics) => topics.createdBy, {
     onDelete: 'CASCADE',
+    eager: false,
   })
   topics: Topic[];
 
-  @OneToMany(() => Comment, (comments) => comments.user, {
+  @OneToMany(() => Comment, (comments) => comments.createdBy, {
     onDelete: 'CASCADE',
   })
   comments: Comment[];

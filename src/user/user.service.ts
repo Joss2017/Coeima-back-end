@@ -24,15 +24,11 @@ export class UserService {
 
   //-------------------------------------------------Mettre à jour un user--------------------------------//
 
-  async updateUser(
-    idValue: string,
-    updateUserDto: UpdateUserDto,
-    connectedUser: User,
-  ) {
+  async updateUser(updateUserDto: UpdateUserDto, connectedUser: User) {
     //-------------------------Recherche du user dans la BDD -------------------//
 
     const oneUserFound = await this.userRepository.findOneBy({
-      id: idValue,
+      id: connectedUser.id,
     });
     console.log('connectedUser requete update user', connectedUser);
     console.log('user trouvé', oneUserFound);
@@ -54,15 +50,19 @@ export class UserService {
       );
     }
 
-    //-----Destructuration de l'update afin de rehasher mot de passe ----//
+    //-----Destructuration de l'update  transfert object------------------------//
 
     const { nickname, email, password, phone } = updateUserDto;
     try {
+      //-----Si password rehashage du nouveau password------------------------//
+
       if (password) {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
         oneUserFound.password = hashedPassword;
       }
+      //-----Comparaisons des données entrantes avec Bdd si différentes, nouvelles valeurs---------//
+
       if (nickname !== oneUserFound.nickname) {
         oneUserFound.nickname = nickname;
       }
@@ -72,6 +72,8 @@ export class UserService {
       if (phone !== oneUserFound.phone) {
         oneUserFound.phone = phone;
       }
+      //-----Sauveagarde des données entrantes------------------------//
+
       return await this.userRepository.save(oneUserFound);
     } catch (error) {
       ('les mises à jour ne sont pas prises en compte');
@@ -105,7 +107,7 @@ export class UserService {
     }
     try {
       const result = await this.userRepository.delete({
-        id: idValue,
+        id: connectedUser.id,
       });
       console.log('valeur du result par id', result);
       if (result.affected !== 0) {

@@ -35,8 +35,10 @@ export class Message {
     onDelete: 'CASCADE',
   })
   receiver: User;
+
   @ManyToOne(() => User, (user) => user.messagesSent, {
     onDelete: 'CASCADE',
+    eager: true,
   })
   sender: User;
 }

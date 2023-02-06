@@ -54,13 +54,18 @@ export class Topic {
     nullable: true,
   })
   tag: boolean;
+  //---------permets de récuperer la valeur Id du user---------//
+  // @Column()
+  // createdById: string;
 
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//
-
   @ManyToOne(() => User, (user) => user.topics, {
     nullable: false,
     onDelete: 'CASCADE',
+    eager: true,
   })
+  createdBy: User;
+
   @OneToMany(() => Comment, (comments) => comments.topic, {
     onDelete: 'CASCADE',
 
@@ -68,5 +73,4 @@ export class Topic {
     eager: true,
   })
   comments: Comment[];
-  user: any;
 }

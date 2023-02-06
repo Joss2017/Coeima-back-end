@@ -32,8 +32,8 @@ export class OfferController {
   //-------------------------Route afficher un OFFER-----------------------------------//
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Offer> {
-    return this.offerService.findOne(id);
+  findOne(@Param('id') idValue: string): Promise<Offer> {
+    return this.offerService.findOne(idValue);
   }
 
   //-------------------------Route créer un OFFER--------------------------------------//
@@ -43,9 +43,9 @@ export class OfferController {
   @Roles(RoleEnumType.ADMIN)
   create(
     @Body() createOfferDto: CreateOfferDto,
-    @GetUser() user: User,
+    @GetUser() connectedUser: User,
   ): Promise<Offer> {
-    return this.offerService.create(createOfferDto, user);
+    return this.offerService.create(createOfferDto, connectedUser);
   }
 
   //-------------------------Route update un OFFER--------------------------------------//
@@ -54,11 +54,11 @@ export class OfferController {
   @UseGuards(AuthGuard(), RolesGuard)
   @Roles(RoleEnumType.ADMIN)
   update(
-    @Param('id') id: string,
+    @Param('id') idValue: string,
     @Body() updateOfferDto: UpdateOfferDto,
-    @GetUser() user: User,
+    @GetUser() connectedUser: User,
   ): Promise<Offer> {
-    return this.offerService.update(id, updateOfferDto, user);
+    return this.offerService.update(idValue, updateOfferDto, connectedUser);
   }
 
   //-------------------------Route delete un OFFER--------------------------------------//
@@ -66,7 +66,7 @@ export class OfferController {
   @Delete(':id')
   @UseGuards(AuthGuard(), RolesGuard)
   @Roles(RoleEnumType.ADMIN)
-  remove(@Param('id') id: string): Promise<Offer | string> {
-    return this.offerService.remove(id);
+  remove(@Param('id') idValue: string): Promise<Offer | string> {
+    return this.offerService.remove(idValue);
   }
 }

@@ -29,7 +29,7 @@ export class UpdateUserDto extends PartialType(CreateAuthDto) {
   nickname: string;
 
   @IsEmail()
-  @IsOptional()
+  @IsNotEmpty()
   email: string;
 
   @IsString()
@@ -45,7 +45,7 @@ export class UpdateUserDto extends PartialType(CreateAuthDto) {
 
   hashedPassword: string;
 
-  @IsString()
+  @IsOptional()
   @MaxLength(10, { message: '10 chiffres maximum' })
   phone: string;
 }

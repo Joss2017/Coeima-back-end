@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsNumberString,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -40,7 +41,7 @@ export class CreateAuthDto {
   })
   password: string;
 
-  @IsNumberString()
+  @IsOptional()
   @MaxLength(10, { message: '10 chiffres maximum' })
   phone: string;
 }
