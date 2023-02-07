@@ -1,13 +1,10 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsNumberString,
   IsOptional,
-  IsString,
   Matches,
   MaxLength,
   MinLength,
-  MIN_LENGTH,
 } from 'class-validator';
 import { RoleEnumType } from 'src/user/entities/user.entity';
 
