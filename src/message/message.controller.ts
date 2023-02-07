@@ -24,30 +24,30 @@ export class MessageController {
   //-------------------------Route afficher tout les MESSAGES-----------------------------//
 
   @Get()
-  findAll(@GetUser() user: User): Promise<Message[]> {
-    return this.messageService.findAll(user);
+  findAll(@GetUser() connectedUser: User): Promise<Message[]> {
+    return this.messageService.findAll(connectedUser);
   }
 
   //-------------------------Route créer un MESSAGE userConnecté--------------------------------------//
   @Post()
   createMessage(
     @Body() createMessageDto: CreateMessageDto,
-    @GetUser() user: User,
+    @GetUser() connectedUser: User,
   ): Promise<Message> {
-    return this.messageService.createMessage(createMessageDto, user);
+    return this.messageService.createMessage(createMessageDto, connectedUser);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') idValue: string,
     @Body() updateMessageDto: UpdateMessageDto,
-    @GetUser() user: User,
+    @GetUser() connectedUser: User,
   ) {
-    return this.messageService.update(id, updateMessageDto, user);
+    return this.messageService.update(idValue, updateMessageDto, connectedUser);
   }
   //-------------------------Route delete un MESSAGE--------------------------------------//
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.messageService.remove(+id);
+  remove(@Param('id') idValue: string, @GetUser() connectedUser: User) {
+    return this.messageService.remove(idValue, connectedUser);
   }
 }

@@ -14,39 +14,59 @@ import { User } from 'src/user/entities/user.entity';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Comment } from './entities/comment.entity';
 
 @Controller('comment')
 export class CommentsController {
   constructor(private readonly commentService: CommentService) {}
 
+  //-------------------------Route afficher tout les COMMENTS-----------------------------//
+
   @Get()
-  findAll() {
-    return this.commentService.findAll();
+  findAllComments(): Promise<Comment[]> {
+    return this.commentService.findAllComments();
   }
+
+  //-------------------------Route afficher un COMMENT-----------------------------//
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
+  findOneComment(@Param('id') idValue: string): Promise<Comment> {
+    return this.commentService.findOneComment(idValue);
   }
+
+  //-------------------------Route créer un COMMENT-----------------------------//
+
   @Post()
-  // @UseGuards(AuthGuard())
-  create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentService.create(createCommentDto);
+  @UseGuards(AuthGuard())
+  createComment(
+    @Body()
+    createCommentDto: CreateCommentDto,
+    @GetUser() connectedUser: User,
+  ) {
+    return this.commentService.createComment(createCommentDto, connectedUser);
   }
+
+  //-------------------------Route update un COMMENT-----------------------------//
 
   @Patch(':id')
-  // @UseGuards(AuthGuard())
-  update(
-    @Param('id') id: string,
-    @GetUser() user: User,
+  @UseGuards(AuthGuard())
+  updateComment(
+    @Param('id') idValue: string,
+    @GetUser() connectedUser: User,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
-    return this.commentService.update(+id, updateCommentDto);
+    return this.commentService.updateComment(
+      idValue,
+      updateCommentDto,
+      connectedUser,
+    );
   }
 
+  //-------------------------Route supprimer un COMMENT-----------------------------//
+
   @Delete(':id')
-  // @UseGuards(AuthGuard())
-  remove(@Param('id') id: string, @GetUser() user: User) {
-    return this.commentService.remove(+id);
+  @UseGuards(AuthGuard())
+  remove(@Param('id') idValue: string, @GetUser() connectedUser: User) {
+    return this.commentService.remove(idValue, connectedUser);
   }
 }

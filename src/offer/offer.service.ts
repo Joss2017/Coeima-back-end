@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -6,8 +10,11 @@ import { CreateOfferDto } from './dto/create-offer.dto';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './entities/offer.entity';
 
+//------------------------------------------------ par le decorator @Injectable => definit le Provider TopicModule------------//
 @Injectable()
+//---------------------------------------------------------- export de la classe OfferService---------------------------------//
 export class OfferService {
+  //-------------------------Constructor avec mise en place paramètre privé+decorator @InjectRepository entité Offer----------//
   constructor(
     @InjectRepository(Offer)
     private offerRepository: Repository<Offer>,
@@ -25,27 +32,31 @@ export class OfferService {
 
   // -----------------------------------------------Méthode afficher un OFFER------------------------//
 
-  async findOne(idValue: string) {
+  async findOneOffer(idValue: string) {
     try {
       const oneOfferFound = await this.offerRepository.findOneBy({
         id: idValue,
       });
-      console.log('id du offer trouvé', oneOfferFound);
+      console.log(' offer trouvé', oneOfferFound);
       return oneOfferFound;
     } catch (error) {
-      throw new NotFoundException(`pas de sujet trouvé avec l'id:${idValue}`);
+      `Pas d'offre trouvée`;
+      console.log(error);
     }
   }
 
-  // -----------------------------------------------Méthode créer un OFFER---------------------------//
+  // -----------------------------------------------Méthode de création OFFER---------------------------//
 
-  async create(createOfferDto: CreateOfferDto, connectedUser: User) {
+  async createOfferByAdmin(
+    createOfferDto: CreateOfferDto,
+    connectedUser: User,
+  ) {
     const { title, body, picture } = createOfferDto;
     const newOffer = await this.offerRepository.create({
       title,
       body,
       picture,
-      user: connectedUser,
+      createdBy: connectedUser,
     });
     console.log('création newOffer-------- ', newOffer);
 
@@ -59,7 +70,7 @@ export class OfferService {
 
   // -----------------------------------------------Méthode update un OFFER---------------------------//
 
-  async update(
+  async updateOfferByAdmin(
     idValue: string,
     updateOfferDto: UpdateOfferDto,
     connectedUser: User,
@@ -68,7 +79,6 @@ export class OfferService {
 
     const offerFound = await this.offerRepository.findOneBy({
       id: idValue,
-      user: connectedUser,
     });
     console.log(' user requête update offer', connectedUser);
     console.log(' offerFound trouvé', offerFound);
@@ -81,8 +91,13 @@ export class OfferService {
 
     //-------------------------Gestion erreur si même valeur-----------//
 
-    if (offerFound.title === updateOfferDto.title) {
-      throw new Error('Erreur, le titre est le même que precedemment');
+    if (
+      offerFound.createdBy.id !== connectedUser.id &&
+      connectedUser.role !== 'admin'
+    ) {
+      throw new UnauthorizedException(
+        "Vous n'êtes pas autorisé à modifier ces informations",
+      );
     }
 
     //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
@@ -106,7 +121,7 @@ export class OfferService {
 
   // -----------------------------------------------Méthode delete un OFFER---------------------------//
 
-  async remove(idValue: string) {
+  async removeOfferByAdmin(idValue: string) {
     const oneOfferFound = await this.offerRepository.findOneBy({
       id: idValue,
     });

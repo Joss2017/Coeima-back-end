@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -58,12 +63,97 @@ export class MessageService {
 
   // -----------------------------------------------Méthode update un MESSAGE---------------------------//
 
-  update(id: string, updateMessageDto: UpdateMessageDto, connectedUser: User) {
-    return `This action updates a #${id} message`;
+  async update(
+    idValue: string,
+    updateMessageDto: UpdateMessageDto,
+    connectedUser: User,
+  ) {
+    //-------------------------Recherche du message dans la BDD -------------------//
+
+    const oneMessageFound = await this.messageRepository.findOneBy({
+      id: idValue,
+    });
+    console.log('connectedUser requete update message', connectedUser);
+    console.log('message trouvé', oneMessageFound);
+
+    //-------------------------Gestion erreur si pas de message dans la BDD -------//
+
+    if (!oneMessageFound) {
+      throw new NotFoundException("Ce message n'existe pas");
+    }
+
+    //-------------------------Gestion erreur si  user pas autorisé -----------//
+    if (
+      oneMessageFound.sender.id !== connectedUser.id &&
+      connectedUser.role !== 'admin'
+    ) {
+      throw new UnauthorizedException(
+        "Vous n'êtes pas autorisé à modifier ces informations",
+      );
+    }
+
+    //-----------------------------Destructuration de l'update Message------------------------//
+
+    const { body } = updateMessageDto;
+    //-----Comparaison des données entrantes avec Bdd si différentes, nouvelle valeur---------//
+    console.log(' valeur du body entrant', body);
+
+    if (body !== oneMessageFound.body) {
+      oneMessageFound.body = body;
+      console.log(
+        ' Nouvelle valeur de  oneMessageFound ',
+        oneMessageFound.body,
+      );
+    } else {
+      throw new InternalServerErrorException(
+        `la valeur de votre message est identique`,
+      );
+    }
+    try {
+      //-----Sauveagarde des données entrantes------------------------//
+
+      return await this.messageRepository.save(oneMessageFound);
+    } catch (error) {
+      ('les mises à jour de votre message ne sont pas prises en compte');
+      console.log(error);
+    }
   }
+
   // -----------------------------------------------Méthode delete un MESSAGE---------------------------//
 
-  remove(id: number) {
-    return `This action removes a #${id} message`;
+  async remove(idValue: string, connectedUser: User) {
+    const oneMessageFound = await this.messageRepository.findOneBy({
+      id: idValue,
+    });
+    console.log('connectedUser remove message', connectedUser);
+    console.log('message trouvé  remove', oneMessageFound);
+
+    //-------------------------Gestion erreur si pas de message dans la BDD -------//
+
+    if (!oneMessageFound) {
+      throw new NotFoundException("Ce message n'existe pas");
+    }
+    //-------------------------Gestion erreur si  user pas autorisé -----------//
+
+    if (
+      oneMessageFound.sender.id !== connectedUser.id &&
+      connectedUser.role !== 'admin'
+    ) {
+      throw new UnauthorizedException(
+        "Vous n'êtes pas autorisé à modifier ces informations",
+      );
+    }
+    try {
+      const result = await this.messageRepository.delete({
+        id: idValue,
+      });
+      console.log('valeur du result par id', result);
+      if (result.affected !== 0) {
+        return `Cette action a supprimé le message avec le contenu ${oneMessageFound.body}`;
+      }
+    } catch (error) {
+      `Impossible de supprimer le message`;
+      console.log(error);
+    }
   }
 }

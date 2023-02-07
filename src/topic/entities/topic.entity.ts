@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-//----------Mise en place des différentes colommnes via type ORM  de l'entité topics----------//
+//-------------------------------- génération de l'entité par decorator @Entity ---------------------//
 
 @Entity()
 export class Topic {
@@ -56,11 +56,13 @@ export class Topic {
   tag: boolean;
 
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//
-
   @ManyToOne(() => User, (user) => user.topics, {
     nullable: false,
     onDelete: 'CASCADE',
+    eager: true,
   })
+  createdBy: User;
+
   @OneToMany(() => Comment, (comments) => comments.topic, {
     onDelete: 'CASCADE',
 
@@ -68,5 +70,4 @@ export class Topic {
     eager: true,
   })
   comments: Comment[];
-  user: any;
 }

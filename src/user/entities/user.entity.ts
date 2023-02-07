@@ -11,6 +11,8 @@ export enum RoleEnumType {
   ADMIN = 'admin',
 }
 
+//-------------------------------- génération de l'entité par decorator @Entity ---------------------//
+
 @Entity()
 export class User {
   //-------------------------------- génération de la clé primaire------------------------------------//
@@ -61,26 +63,26 @@ export class User {
   @Column({
     nullable: true,
   })
-  files?: string;
+  files: string;
 
   @Column({
     nullable: true,
   })
   legendFiles?: string;
 
-  //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//
+  //----------------------liaison tables suivant leurs cardinalités via clé étrangére personnalisée---------//
 
-  @OneToMany(() => Offer, (offers) => offers.user, {
+  @OneToMany(() => Offer, (offers) => offers.createdBy, {
     onDelete: 'CASCADE',
   })
   offers: Offer[];
 
-  @OneToMany(() => Topic, (topics) => topics.user, {
+  @OneToMany(() => Topic, (topics) => topics.createdBy, {
     onDelete: 'CASCADE',
   })
   topics: Topic[];
 
-  @OneToMany(() => Comment, (comments) => comments.user, {
+  @OneToMany(() => Comment, (comments) => comments.createdBy, {
     onDelete: 'CASCADE',
   })
   comments: Comment[];
