@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import * as dotenv from 'dotenv';
 
 //-----------------------------------Création de la méthode du JWT---------------------------------------------//
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: './env/.env.local' });
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(

@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 
 //--------------------Permet de relier au fichier .env.local stockant des données sensibles---------------------//
 
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: './env/.env.local' });
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
