@@ -6,7 +6,7 @@ import { User } from '../user/entities/user.entity';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from '../jwt/jwt.strategy';
 
 dotenv.config({ path: '.env.local' });
 @Module({

@@ -9,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RoleEnumType, User } from './entities/user.entity';
-import { GetUser } from 'src/auth/get-user.decorator';
+import { GetUser } from 'src/decorator/get-user.decorator';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/auth/roles.guard';
-import { Roles } from 'src/auth/roles.decorator';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorator/roles.decorator';
 
 //------------------------- par le decorator @Controller => definit le Provider UserModule----------------------------------//
 
