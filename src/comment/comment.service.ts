@@ -19,7 +19,7 @@ export class CommentService {
 
   // -----------------------------------------------Méthode afficher tout les COMMENTS------------------------//
 
-  async findAll() {
+  async findAllComments() {
     const allCommentsFound: Comment[] = await this.commentRepository.find();
     console.log('topics trouvés', allCommentsFound);
     if (!allCommentsFound) {
@@ -31,7 +31,7 @@ export class CommentService {
 
   // -----------------------------------------------Méthode afficher un COMMENT-------------------------------//
 
-  async findOne(idValue: string) {
+  async findOneComment(idValue: string) {
     try {
       const oneCommentFound = await this.commentRepository.findOneBy({
         id: idValue,
@@ -39,14 +39,14 @@ export class CommentService {
       console.log('commentaire trouvé----------------', oneCommentFound);
       return oneCommentFound;
     } catch (error) {
-      `pas de commentaire trouvé avec l'id:${idValue}`;
+      `pas de commentaire trouvé `;
       console.log(error);
     }
   }
 
   // -----------------------------------------------Méthode de création COMMENT-------------------------------//
 
-  async create(createCommentDto: CreateCommentDto, connectedUser: User) {
+  async createComment(createCommentDto: CreateCommentDto, connectedUser: User) {
     const { title, body } = createCommentDto;
     const newComment = await this.commentRepository.create({
       title,
@@ -64,7 +64,7 @@ export class CommentService {
 
   // -----------------------------------------------Méthode update COMMENT-------------------------------//
 
-  async update(
+  async updateComment(
     idValue: string,
     updateCommentDto: UpdateCommentDto,
     connectedUser: User,
@@ -73,9 +73,8 @@ export class CommentService {
 
     const oneCommentFound = await this.commentRepository.findOneBy({
       id: idValue,
-      createdBy: connectedUser,
     });
-    console.log('connectedUser requete remove user', connectedUser);
+    console.log('connectedUser requete update user', connectedUser);
     console.log(' topic trouvé', oneCommentFound);
 
     //-------------------------Gestion erreur si pas de topic dans la BDD -------//
@@ -97,8 +96,12 @@ export class CommentService {
 
     //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
     const { title, body } = updateCommentDto;
-
     //-------------------------Gestion erreur si même valeur-----------//
+    if (oneCommentFound.title === title || oneCommentFound.body === body) {
+      throw new Error(
+        'Erreur, les valeurs entrées sont identiques aux précèdents',
+      );
+    }
 
     if (title) {
       oneCommentFound.title = title;

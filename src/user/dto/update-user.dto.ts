@@ -18,8 +18,9 @@ export class UpdateUserDto extends PartialType(CreateAuthDto) {
 
   //--- Import de la class validator permettant de mettre des conditions données entrantes---//
 
-  @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'ton pseudo doit être complété',
+  })
   @MinLength(4, {
     message: 'la taille du pseudo doit être au minimum de 4 caractères',
   })
@@ -28,12 +29,17 @@ export class UpdateUserDto extends PartialType(CreateAuthDto) {
   })
   nickname: string;
 
-  @IsEmail()
-  @IsNotEmpty()
+  @IsEmail({
+    message: "le format du mail n'est pas conforme",
+  })
+  @IsNotEmpty({
+    message: 'ton mail doit être complété',
+  })
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: "n'oublie de mettre un mot de passe",
+  })
   @MinLength(8, {
     message: 'la taille du mot de passe doit être au minimum de 8 caractères',
   })
@@ -48,4 +54,6 @@ export class UpdateUserDto extends PartialType(CreateAuthDto) {
   @IsOptional()
   @MaxLength(10, { message: '10 chiffres maximum' })
   phone: string;
+  files: string;
+  legendFiles: string;
 }

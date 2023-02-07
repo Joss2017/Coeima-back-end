@@ -36,5 +36,5 @@ export class Offer {
     onDelete: 'CASCADE',
     nullable: false,
   })
-  user: User;
+  createdBy: User;
 }

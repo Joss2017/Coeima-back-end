@@ -16,10 +16,14 @@ import { Comment } from './comment/entities/comment.entity';
 import { MessageModule } from './message/message.module';
 import { Message } from './message/entities/message.entity';
 
+//--------------------Permet de relier au fichier .env.local stockant des données sensibles---------------------//
+
 dotenv.config({ path: '.env.local' });
 
 @Module({
   imports: [
+    //-----------Imports Permettant de relier les informations à BDD PostGres stockée fichier dotEnv-------------//
+
     ConfigModule.forRoot({
       envFilePath: '.env.local',
     }),
@@ -33,6 +37,7 @@ dotenv.config({ path: '.env.local' });
       entities: [User, Topic, Offer, Message, Comment],
       synchronize: process.env.MODE === 'DEV' ? true : false,
     }),
+    //-----------Imports Permettant de connecter les modules des différentes entités au module principal---------//
     UserModule,
     OfferModule,
     TopicModule,

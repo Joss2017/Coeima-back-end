@@ -29,6 +29,11 @@ export class Message {
   })
   body: string;
 
+  @Column({
+    nullable: true,
+  })
+  url: string;
+
   //----------------------liaison 2 clés étrangères sender/receiver avec l'entité users--------------------//
 
   @ManyToOne(() => User, (user) => user.messagesReceived, {

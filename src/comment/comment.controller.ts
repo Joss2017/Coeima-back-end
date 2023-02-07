@@ -23,39 +23,43 @@ export class CommentsController {
   //-------------------------Route afficher tout les COMMENTS-----------------------------//
 
   @Get()
-  findAll(): Promise<Comment[]> {
-    return this.commentService.findAll();
+  findAllComments(): Promise<Comment[]> {
+    return this.commentService.findAllComments();
   }
 
   //-------------------------Route afficher un COMMENT-----------------------------//
 
   @Get(':id')
-  findOne(@Param('id') idValue: string): Promise<Comment> {
-    return this.commentService.findOne(idValue);
+  findOneComment(@Param('id') idValue: string): Promise<Comment> {
+    return this.commentService.findOneComment(idValue);
   }
 
   //-------------------------Route créer un COMMENT-----------------------------//
 
   @Post()
   @UseGuards(AuthGuard())
-  create(
+  createComment(
     @Body()
     createCommentDto: CreateCommentDto,
     @GetUser() connectedUser: User,
   ) {
-    return this.commentService.create(createCommentDto, connectedUser);
+    return this.commentService.createComment(createCommentDto, connectedUser);
   }
 
   //-------------------------Route update un COMMENT-----------------------------//
 
   @Patch(':id')
   @UseGuards(AuthGuard())
-  update(
+  updateComment(
     @Param('id') idValue: string,
     @GetUser() connectedUser: User,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
-    return this.commentService.update(idValue, updateCommentDto, connectedUser);
+    return this.commentService.updateComment(
+      idValue,
+      updateCommentDto,
+      connectedUser,
+    );
   }
 
   //-------------------------Route supprimer un COMMENT-----------------------------//

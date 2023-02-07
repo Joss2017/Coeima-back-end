@@ -25,15 +25,15 @@ export class OfferController {
   //-------------------------Route afficher tout les OFFERS-----------------------------//
 
   @Get()
-  findAll(): Promise<Offer[]> {
+  findAllOffers(): Promise<Offer[]> {
     return this.offerService.findAllOffers();
   }
 
   //-------------------------Route afficher un OFFER-----------------------------------//
 
   @Get(':id')
-  findOne(@Param('id') idValue: string): Promise<Offer> {
-    return this.offerService.findOne(idValue);
+  findOneOffer(@Param('id') idValue: string): Promise<Offer> {
+    return this.offerService.findOneOffer(idValue);
   }
 
   //-------------------------Route créer un OFFER--------------------------------------//
@@ -41,11 +41,11 @@ export class OfferController {
   @Post()
   @UseGuards(AuthGuard(), RolesGuard)
   @Roles(RoleEnumType.ADMIN)
-  create(
+  createOfferByAdmin(
     @Body() createOfferDto: CreateOfferDto,
     @GetUser() connectedUser: User,
   ): Promise<Offer> {
-    return this.offerService.create(createOfferDto, connectedUser);
+    return this.offerService.createOfferByAdmin(createOfferDto, connectedUser);
   }
 
   //-------------------------Route update un OFFER--------------------------------------//
@@ -53,12 +53,16 @@ export class OfferController {
   @Patch(':id')
   @UseGuards(AuthGuard(), RolesGuard)
   @Roles(RoleEnumType.ADMIN)
-  update(
+  updateOfferByAdmin(
     @Param('id') idValue: string,
     @Body() updateOfferDto: UpdateOfferDto,
     @GetUser() connectedUser: User,
   ): Promise<Offer> {
-    return this.offerService.update(idValue, updateOfferDto, connectedUser);
+    return this.offerService.updateOfferByAdmin(
+      idValue,
+      updateOfferDto,
+      connectedUser,
+    );
   }
 
   //-------------------------Route delete un OFFER--------------------------------------//
@@ -66,7 +70,7 @@ export class OfferController {
   @Delete(':id')
   @UseGuards(AuthGuard(), RolesGuard)
   @Roles(RoleEnumType.ADMIN)
-  remove(@Param('id') idValue: string): Promise<Offer | string> {
-    return this.offerService.remove(idValue);
+  removeOfferByAdmin(@Param('id') idValue: string): Promise<Offer | string> {
+    return this.offerService.removeOfferByAdmin(idValue);
   }
 }

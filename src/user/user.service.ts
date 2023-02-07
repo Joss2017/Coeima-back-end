@@ -9,14 +9,17 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
+//------------------------------------------------ par le decorator @Injectable => definit le Provider UserModule------------//
 @Injectable()
+//---------------------------------------------------------- export de la classe UserService---------------------------------//
 export class UserService {
+  //-------------------------Constructor avec mise en place paramètre privé+decorator @InjectRepository entité User----------//
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
 
-  //-------------------------------------------------Trouver tout les Users--------------------------------//
+  //-------------------------------------------------Trouver tout les Users by Admin--------------------------------//
 
   async findAllUsersByAdmin() {
     return await this.userRepository.find();
@@ -24,15 +27,17 @@ export class UserService {
 
   //-------------------------------------------------Mettre à jour un user--------------------------------//
 
-  async updateUser(updateUserDto: UpdateUserDto, connectedUser: User) {
+  async updateUser(
+    idValue: string,
+    updateUserDto: UpdateUserDto,
+    connectedUser: User,
+  ) {
     //-------------------------Recherche du user dans la BDD -------------------//
 
-    const oneUserFound = await this.userRepository.findOneBy({
-      id: connectedUser.id,
-    });
+    const oneUserFound = await this.userRepository.findOneBy({ id: idValue });
+
     console.log('connectedUser requete update user', connectedUser);
     console.log('user trouvé', oneUserFound);
-
     //-------------------------Gestion erreur si pas de user dans la BDD -------//
 
     if (!oneUserFound) {
@@ -53,6 +58,17 @@ export class UserService {
     //-----Destructuration de l'update  transfert object------------------------//
 
     const { nickname, email, password, phone } = updateUserDto;
+
+    //-----Conditions afin de ne pas remettre des données entrantes identiques------------------------//
+    if (
+      email === oneUserFound.email ||
+      password === oneUserFound.password ||
+      phone === oneUserFound.phone
+    ) {
+      throw new UnauthorizedException(
+        'Attention  valeurs entrantes identiques !',
+      );
+    }
     try {
       //-----Si password rehashage du nouveau password------------------------//
 
@@ -81,12 +97,13 @@ export class UserService {
     }
   }
 
-  //-------------------------------------------------Supprimer un user- -----------------------------------//
+  //-------------------------------------------------Supprimer un user- ---------------------------------------------------------------//
 
-  async remove(idValue: string, connectedUser: User) {
-    const oneUserFound = await this.userRepository.findOneBy({
-      id: idValue,
-    });
+  async removeUser(idValue: string, connectedUser: User) {
+    //-------------------------recherche dans la BDD await car asynchrone par repository (typeORM) +methode findOneBy-------//
+
+    const oneUserFound = await this.userRepository.findOneBy({ id: idValue });
+
     console.log('connectedUser requete remove user', connectedUser);
     console.log('user trouvé', oneUserFound);
 
@@ -95,7 +112,7 @@ export class UserService {
     if (!oneUserFound) {
       throw new NotFoundException("Cette utilisateur n'existe pas");
     }
-    //-------------------------Gestion erreur si  user pas autorisé -----------//
+    //-------------------------Gestion erreur si  user pas autorisé ou !== admin -----------//
 
     if (
       oneUserFound.id !== connectedUser.id &&
@@ -105,6 +122,8 @@ export class UserService {
         "Vous n'êtes pas autorisé à modifier ces informations",
       );
     }
+    //------------------------- asynchrone par repository (typeORM) +methode delete-------//
+
     try {
       const result = await this.userRepository.delete({
         id: connectedUser.id,

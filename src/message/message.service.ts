@@ -83,9 +83,8 @@ export class MessageService {
     }
 
     //-------------------------Gestion erreur si  user pas autorisé -----------//
-
     if (
-      connectedUser.id !== oneMessageFound.sender.id ||
+      oneMessageFound.sender.id !== connectedUser.id &&
       connectedUser.role !== 'admin'
     ) {
       throw new UnauthorizedException(
@@ -132,12 +131,12 @@ export class MessageService {
     //-------------------------Gestion erreur si pas de message dans la BDD -------//
 
     if (!oneMessageFound) {
-      throw new NotFoundException("Ce topic n'existe pas");
+      throw new NotFoundException("Ce message n'existe pas");
     }
     //-------------------------Gestion erreur si  user pas autorisé -----------//
 
     if (
-      connectedUser.id === oneMessageFound.sender.id &&
+      oneMessageFound.sender.id !== connectedUser.id &&
       connectedUser.role !== 'admin'
     ) {
       throw new UnauthorizedException(
@@ -153,7 +152,7 @@ export class MessageService {
         return `Cette action a supprimé le message avec le contenu ${oneMessageFound.body}`;
       }
     } catch (error) {
-      `Impossible de supprimer le user`;
+      `Impossible de supprimer le message`;
       console.log(error);
     }
   }

@@ -37,6 +37,10 @@ export class Comment {
   })
   body: string;
 
+  @Column({
+    nullable: true,
+  })
+  url: string;
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//
 
   @ManyToOne(() => User, (users) => users.id, {

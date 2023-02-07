@@ -10,8 +10,11 @@ import { CreateTopicDto } from './dto/create-topic.dto';
 import { UpdateTopicDto } from './dto/update-topic.dto';
 import { Topic } from './entities/topic.entity';
 
+//------------------------------------------------ par le decorator @Injectable => definit le Provider TopicModule------------//
 @Injectable()
+//---------------------------------------------------------- export de la classe TopicService---------------------------------//
 export class TopicService {
+  //-------------------------Constructor avec mise en place paramètre privé+decorator @InjectRepository entité Topic----------//
   constructor(
     @InjectRepository(Topic)
     private topicRepository: Repository<Topic>,
@@ -19,7 +22,7 @@ export class TopicService {
 
   // -----------------------------------------------Méthode afficher tout les TOPICS------------------------//
 
-  async findAll() {
+  async findAllTopics() {
     const allTopicsFound: Topic[] = await this.topicRepository.find();
     console.log('topics trouvés', allTopicsFound);
     if (!allTopicsFound) {
@@ -30,7 +33,7 @@ export class TopicService {
   }
   // -----------------------------------------------Méthode afficher un TOPIC-------------------------------//
 
-  async findOne(idValue: string) {
+  async findOneTopic(idValue: string) {
     try {
       const oneTopicFound = await this.topicRepository.findOneBy({
         id: idValue,
@@ -44,7 +47,7 @@ export class TopicService {
   }
   // -----------------------------------------------Méthode de création TOPIC-------------------------------//
 
-  async create(createTopicDto: CreateTopicDto, connectedUser: User) {
+  async createTopic(createTopicDto: CreateTopicDto, connectedUser: User) {
     const { title, body, url } = createTopicDto;
     const newTopic = await this.topicRepository.create({
       title,
@@ -63,7 +66,7 @@ export class TopicService {
 
   // -----------------------------------------------Méthode update TOPICS-------------------------------//
 
-  async update(
+  async updateTopic(
     idValue: string,
     updateTopicDto: UpdateTopicDto,
     connectedUser: User,
@@ -91,7 +94,6 @@ export class TopicService {
         "Vous n'êtes pas autorisé à modifier ces informations",
       );
     }
-    console.log('Valeur de topicFound.user', oneTopicFound);
 
     //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
 
@@ -99,7 +101,7 @@ export class TopicService {
     //-------------------------Gestion erreur si même valeur-----------//
 
     if (oneTopicFound.body === body) {
-      throw new Error('Erreur, le commentaire est le même que precedemment');
+      throw new Error('Erreur, le titre du post est le même que precedemment');
     }
     console.log('le titre du nouveau commentaire', body);
 
@@ -119,7 +121,7 @@ export class TopicService {
 
   // -----------------------------------------------Méthode delete TOPICS by Admin---------------------//
 
-  async remove(idValue: string, connectedUser: User) {
+  async removeTopic(idValue: string, connectedUser: User) {
     const oneTopicFound = await this.topicRepository.findOneBy({
       id: idValue,
     });
@@ -132,15 +134,16 @@ export class TopicService {
       throw new NotFoundException("Ce topic n'existe pas");
     }
     //-------------------------Gestion erreur si  user pas autorisé -----------//
-    // const topicTrouver = { ...oneTopicFound.createdBy.id };
+
     if (
-      oneTopicFound.createdBy.id !== connectedUser.id ||
+      oneTopicFound.createdBy.id !== connectedUser.id &&
       connectedUser.role !== 'admin'
     ) {
       throw new UnauthorizedException(
         "Vous n'êtes pas autorisé à modifier ces informations",
       );
     }
+
     try {
       const result = await this.topicRepository.delete({
         id: idValue,
@@ -150,7 +153,7 @@ export class TopicService {
         return `Cette action a supprimé le post du forum dont le titre était ${oneTopicFound.title}`;
       }
     } catch (error) {
-      `Impossible de supprimer le user`;
+      `Impossible de supprimer le topic`;
       console.log(error);
     }
   }
