@@ -37,6 +37,20 @@ export class UserController {
     //-------------------------instance de la classe userService-----------------------------//
     return this.userService.findAllUsersByAdmin();
   }
+  //-------------------------Route afficher un User-----------------------------//
+
+  @Get(':id')
+
+  //-------------------------Méthode findOneUser qui par promise renverra un  USER--//
+  findOneUser(
+    //-------------------------par le decorator Param=>on paramètre notre requête par l'idValue----//
+    @Param('id') idValue: string,
+    //-------------------------par le decorator GetUser=> Récupération du user connecté------------//
+    @GetUser() connectedUser: User,
+  ): Promise<User> {
+    //-------------------------instance de la classe userService-----------------------------//
+    return this.userService.findOneUser(idValue, connectedUser);
+  }
 
   //-----------------------------Route Updater compte User---------------------------------------------------------//
 

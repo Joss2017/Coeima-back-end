@@ -13,6 +13,12 @@ export class Offer {
   //-------------------------------- génération des colonnes-------------------------------------------//
 
   @Column({
+    nullable: true,
+    type: 'varchar',
+  })
+  picture: string;
+
+  @Column({
     nullable: false,
     unique: true,
     type: 'varchar',
@@ -28,8 +34,9 @@ export class Offer {
 
   @Column({
     nullable: true,
+    type: 'varchar',
   })
-  picture: string;
+  price: string;
 
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//
   @ManyToOne(() => User, (user) => user.offers, {

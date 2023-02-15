@@ -32,7 +32,6 @@ export class User {
   @Column({
     nullable: false,
     type: 'varchar',
-    unique: true,
 
     //--------------------------------  par default length 255------------------------------------------//
 
@@ -50,22 +49,26 @@ export class User {
   email: string;
 
   @Column({
+    type: 'varchar',
     nullable: false,
   })
   password: string;
 
   @Column({
+    type: 'varchar',
     nullable: true,
     length: 10,
   })
   phone: string;
 
   @Column({
+    type: 'varchar',
     nullable: true,
   })
   files: string;
 
   @Column({
+    type: 'varchar',
     nullable: true,
   })
   legendFiles?: string;

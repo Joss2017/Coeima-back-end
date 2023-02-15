@@ -53,7 +53,7 @@ export class AuthService {
       if (error.code === '23505') {
         throw new ConflictException('Cette utilisateur existe dejà');
       } else {
-        throw new InternalServerErrorException();
+        throw new error();
       }
     }
   }

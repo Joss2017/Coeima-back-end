@@ -1,26 +1,19 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
 // -----------------------------------Connexion du compte USER------------------------------//
 
 export class LoginAuthDto {
   //--- Import de la class validator permettant de mettre des conditions données entrantes---//
 
-  @IsEmail()
+  @IsEmail({
+    message: "le format du mail n'est pas conforme",
+  })
+  @IsNotEmpty({
+    message: 'ton mail doit être complété',
+  })
   email: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(8, {
-    message: 'la taille du mot de passe doit être au minimum de 8 caractères',
-  })
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
-    message:
-      'le mot de passe doit contenir 1 lettre minuscule, 1 lettre majuscule et 1 chiffre ou caractère spécial',
+  @IsNotEmpty({
+    message: 'ton mail doit être complété',
   })
   password: string;
 }

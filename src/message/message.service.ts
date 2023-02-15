@@ -30,6 +30,7 @@ export class MessageService {
       } else {
         allMessagesFound = await this.messageRepository.findBy({
           sender: { id: connectedUser.id },
+          receiver: { id: connectedUser.id },
         });
         console.log('tout les messages par user', allMessagesFound);
       }

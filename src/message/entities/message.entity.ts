@@ -31,6 +31,7 @@ export class Message {
 
   @Column({
     nullable: true,
+    type: 'varchar',
   })
   url: string;
 
