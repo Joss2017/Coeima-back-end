@@ -46,25 +46,36 @@ export class MessageService {
 
   // -----------------------------------------------Méthode créer un MESSAGE USER connecté---------------------------//
 
-  async createMessage(createMessageDto: CreateMessageDto, connectedUser: User) {
+  async createMessage(
+    createMessageDto: CreateMessageDto,
+    connectedUser: User,
+    idValue: string,
+  ): Promise<Message> {
     const { body } = createMessageDto;
     const newMessage = this.messageRepository.create({
       sender: connectedUser,
-      body: body,
+      receiver: { id: idValue },
+      body,
     });
-    console.log('création du message-------- ', newMessage);
+
     try {
-      await this.messageRepository.save(newMessage);
-      return newMessage;
+      const savedMessage = await this.messageRepository.save(newMessage);
+      console.log('Le message a été enregistré avec succès : ', savedMessage);
+      return savedMessage;
     } catch (error) {
-      `les données ne sont pas crées`;
-      console.log(error);
+      console.error(
+        "Une erreur est survenue lors de l'enregistrement du message :",
+        error,
+      );
+      throw new InternalServerErrorException(
+        "Une erreur est survenue lors de l'enregistrement du message",
+      );
     }
   }
 
   // -----------------------------------------------Méthode update un MESSAGE---------------------------//
 
-  async update(
+  async updateMessage(
     idValue: string,
     updateMessageDto: UpdateMessageDto,
     connectedUser: User,
