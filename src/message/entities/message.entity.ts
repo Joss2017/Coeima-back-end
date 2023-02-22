@@ -36,6 +36,13 @@ export class Message {
   })
   url: string;
 
+  @Column({
+    default: false,
+    nullable: false,
+    type: 'boolean',
+  })
+  isRead: boolean;
+
   //----------------------liaison 2 clés étrangères sender/receiver avec l'entité users--------------------//
 
   @ManyToOne(() => User, {

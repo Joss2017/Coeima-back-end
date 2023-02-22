@@ -53,7 +53,7 @@ export class Topic {
 
   @Column({
     default: false,
-    nullable: true,
+    nullable: false,
     type: 'boolean',
   })
   tag: boolean;

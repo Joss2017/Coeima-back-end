@@ -29,7 +29,6 @@ export class MessageService {
         console.log("tout les messages par l'admin", allMessagesFound);
       } else {
         allMessagesFound = await this.messageRepository.findBy({
-          sender: { id: connectedUser.id },
           receiver: { id: connectedUser.id },
         });
         console.log('tout les messages par user', allMessagesFound);
@@ -106,7 +105,7 @@ export class MessageService {
 
     //-----------------------------Destructuration de l'update Message------------------------//
 
-    const { body } = updateMessageDto;
+    const { body, isRead } = updateMessageDto;
     //-----Comparaison des données entrantes avec Bdd si différentes, nouvelle valeur---------//
     console.log(' valeur du body entrant', body);
 
@@ -116,9 +115,13 @@ export class MessageService {
         ' Nouvelle valeur de  oneMessageFound ',
         oneMessageFound.body,
       );
+    }
+
+    if (isRead === true) {
+      oneMessageFound.isRead = isRead;
     } else {
       throw new InternalServerErrorException(
-        `la valeur de votre message est identique`,
+        `Votre message est toujours en attente`,
       );
     }
     try {

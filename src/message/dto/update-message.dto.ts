@@ -13,4 +13,6 @@ export class UpdateMessageDto extends PartialType(CreateMessageDto) {
   @IsOptional()
   @IsUrl({ message: "ton lien URL n'est pas valide" })
   url: string;
+
+  isRead: boolean;
 }
