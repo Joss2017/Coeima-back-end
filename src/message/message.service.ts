@@ -61,10 +61,15 @@ export class MessageService {
     const receiverId = await this.userRepository.findOneBy({
       id: createMessageDto.receiver_id,
     });
+    console.log('id du receiver : ', receiverId);
     //-------------------------------------------Récupération de l'administrateur qui va recevoir le message-----------//
     const receiverAdmin = await this.userRepository.findOneBy({
       role: createMessageDto.role,
     });
+    console.log(
+      'role aldmin par défaut en tant que receiver : ',
+      receiverAdmin,
+    );
 
     //-------------------- Si l'utilisateur connecté est un admin, le message est envoyé à l'utilisateur cible-----------//
     if (connectedUser.role === 'admin') {
