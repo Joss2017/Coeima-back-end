@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
+import { RoleEnumType, User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -14,6 +14,8 @@ import { Message } from './entities/message.entity';
 @Injectable()
 export class MessageService {
   constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     @InjectRepository(Message)
     private messageRepository: Repository<Message>,
   ) {}
@@ -48,16 +50,46 @@ export class MessageService {
   async createMessage(
     createMessageDto: CreateMessageDto,
     connectedUser: User,
-    idValue: string,
   ): Promise<Message> {
-    const { body } = createMessageDto;
-    const newMessage = this.messageRepository.create({
-      sender: connectedUser,
-      receiver: { id: idValue },
-      body,
+    //---------------------------------------- Récupération des données du message à créer---------------------------//
+    const { body, files, legendFiles } = createMessageDto;
+
+    //--------------------------------- Initialisation de la variable qui va contenir le nouveau message-------------//
+    let newMessage: Message = null;
+
+    //-------------------------------------------Récupération de l'utilisateur qui va recevoir le message-------------//
+    const receiverId = await this.userRepository.findOneBy({
+      id: createMessageDto.receiver_id,
+    });
+    //-------------------------------------------Récupération de l'administrateur qui va recevoir le message-----------//
+    const receiverAdmin = await this.userRepository.findOneBy({
+      role: createMessageDto.role,
     });
 
+    //-------------------- Si l'utilisateur connecté est un admin, le message est envoyé à l'utilisateur cible-----------//
+    if (connectedUser.role === 'admin') {
+      //---------------------------------------- Création du message avec les données correspondantes---------------------//
+      newMessage = this.messageRepository.create({
+        sender: connectedUser,
+        receiver: receiverId,
+        body,
+        files,
+        legendFiles,
+      });
+    }
+    //------------------Si l'utilisateur connecté est un simple utilisateur, le message est envoyé à l'administrateur-------//
+    else if (connectedUser.role === 'user') {
+      //----------------------------Création du message avec les données correspondantes------------------------------------//
+      newMessage = this.messageRepository.create({
+        sender: connectedUser,
+        receiver: receiverAdmin,
+        body,
+        files,
+        legendFiles,
+      });
+    }
     try {
+      //------------------------- Enregistrement du message dans la base de données-----------------------------------------//
       const savedMessage = await this.messageRepository.save(newMessage);
       console.log('Le message a été enregistré avec succès : ', savedMessage);
       return savedMessage;
@@ -66,14 +98,14 @@ export class MessageService {
     }
   }
 
-  // -----------------------------------------------Méthode update un MESSAGE---------------------------//
+  // -----------------------------------------------Méthode update un MESSAGE---------------------------------------------//
 
   async updateMessage(
     idValue: string,
     updateMessageDto: UpdateMessageDto,
     connectedUser: User,
   ) {
-    //-------------------------Recherche du message dans la BDD -------------------//
+    //-------------------------Recherche du message dans la BDD ----------------------------------------------------------//
 
     const oneMessageFound = await this.messageRepository.findOneBy({
       id: idValue,

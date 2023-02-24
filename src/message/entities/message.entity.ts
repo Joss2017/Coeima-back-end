@@ -31,10 +31,16 @@ export class Message {
   body: string;
 
   @Column({
-    nullable: true,
     type: 'varchar',
+    nullable: true,
   })
-  url: string;
+  files: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  legendFiles?: string;
 
   @Column({
     default: false,

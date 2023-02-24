@@ -30,17 +30,12 @@ export class MessageController {
   }
 
   //-------------------------Route créer un MESSAGE userConnecté--------------------------------------//
-  @Post(':id')
+  @Post()
   createMessage(
-    @Param('id') idValue: string,
     @Body() createMessageDto: CreateMessageDto,
     @GetUser() connectedUser: User,
   ): Promise<Message> {
-    return this.messageService.createMessage(
-      createMessageDto,
-      connectedUser,
-      idValue,
-    );
+    return this.messageService.createMessage(createMessageDto, connectedUser);
   }
 
   @Patch(':id')
