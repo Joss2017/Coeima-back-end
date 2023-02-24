@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import * as dotenv from 'dotenv';
 
 //-----------------------------------Création de la méthode du JWT---------------------------------------------//
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: './env/.env.local' });
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -20,10 +20,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any): Promise<User> {
+  async validate(payload: User): Promise<User> {
     console.log('validate');
-    const { id } = payload;
-    const user: User = await this.userRepository.findOneBy({ id });
+    const idUserPayload = payload.id;
+    const user: User = await this.userRepository.findOneBy({
+      id: idUserPayload,
+    });
 
     if (!user) throw new UnauthorizedException();
     return user;

@@ -1,13 +1,10 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsNumberString,
   IsOptional,
-  IsString,
   Matches,
   MaxLength,
   MinLength,
-  MIN_LENGTH,
 } from 'class-validator';
 import { RoleEnumType } from 'src/user/entities/user.entity';
 
@@ -50,7 +47,5 @@ export class CreateAuthDto {
   password: string;
 
   @IsOptional()
-  @MinLength(10, { message: '10 chiffres minimum' })
-  @MaxLength(10, { message: '10 chiffres maximum' })
   phone: string;
 }

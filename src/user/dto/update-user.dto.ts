@@ -3,7 +3,6 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
-  IsString,
   Matches,
   MaxLength,
   MinLength,
@@ -54,6 +53,4 @@ export class UpdateUserDto extends PartialType(CreateAuthDto) {
   @IsOptional()
   @MaxLength(10, { message: '10 chiffres maximum' })
   phone: string;
-  files: string;
-  legendFiles: string;
 }

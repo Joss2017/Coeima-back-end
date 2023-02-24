@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -30,20 +31,39 @@ export class Message {
   body: string;
 
   @Column({
+    type: 'varchar',
     nullable: true,
   })
-  url: string;
+  files: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  legendFiles?: string;
+
+  @Column({
+    default: false,
+    nullable: false,
+    type: 'boolean',
+  })
+  isRead: boolean;
 
   //----------------------liaison 2 clés étrangères sender/receiver avec l'entité users--------------------//
 
-  @ManyToOne(() => User, (user) => user.messagesReceived, {
-    onDelete: 'CASCADE',
-  })
-  receiver: User;
-
-  @ManyToOne(() => User, (user) => user.messagesSent, {
+  @ManyToOne(() => User, {
     onDelete: 'CASCADE',
     eager: true,
+    nullable: false,
   })
+  @JoinColumn({ name: 'receiver_id' })
+  receiver: User;
+
+  @ManyToOne(() => User, {
+    onDelete: 'CASCADE',
+    eager: true,
+    nullable: false,
+  })
+  @JoinColumn({ name: 'sender_id' })
   sender: User;
 }

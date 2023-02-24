@@ -41,17 +41,20 @@ export class Topic {
   @Column({
     default: false,
     nullable: true,
+    type: 'varchar',
   })
   favorites: boolean;
 
   @Column({
     nullable: true,
+    type: 'varchar',
   })
   url: string;
 
   @Column({
     default: false,
-    nullable: true,
+    nullable: false,
+    type: 'boolean',
   })
   tag: boolean;
 

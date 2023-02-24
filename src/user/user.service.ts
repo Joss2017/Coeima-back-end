@@ -24,6 +24,33 @@ export class UserService {
   async findAllUsersByAdmin() {
     return await this.userRepository.find();
   }
+  //-------------------------------------------------Trouver un User par ID--------------------------------//
+
+  async findOneUser(idValue: string, connectedUser: User) {
+    const oneUserFound = await this.userRepository.findOneBy({
+      id: idValue,
+    });
+    console.log('user trouvé----------------', oneUserFound);
+
+    if (!oneUserFound) {
+      throw new NotFoundException("Cette utilisateur n'existe pas");
+    }
+
+    if (
+      oneUserFound.id !== connectedUser.id &&
+      connectedUser.role !== 'admin'
+    ) {
+      throw new UnauthorizedException(
+        "Vous n'êtes pas autorisé à voir ces informations",
+      );
+    }
+    try {
+      return oneUserFound;
+    } catch (error) {
+      `pas de user trouvé avec l'id:${idValue}`;
+      console.log(error);
+    }
+  }
 
   //-------------------------------------------------Mettre à jour un user--------------------------------//
 

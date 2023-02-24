@@ -10,7 +10,5 @@ export class UpdateMessageDto extends PartialType(CreateMessageDto) {
   @IsNotEmpty({ message: 'Le texte de ton post ne peut pas être vide' })
   body: string;
 
-  @IsOptional()
-  @IsUrl({ message: "ton lien URL n'est pas valide" })
-  url: string;
+  isRead: boolean;
 }

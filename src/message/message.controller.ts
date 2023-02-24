@@ -13,7 +13,7 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/user/entities/user.entity';
-import { GetUser } from 'src/auth/get-user.decorator';
+import { GetUser } from 'src/decorator/get-user.decorator';
 import { Message } from './entities/message.entity';
 
 @Controller('message')
@@ -24,6 +24,7 @@ export class MessageController {
   //-------------------------Route afficher tout les MESSAGES-----------------------------//
 
   @Get()
+  @UseGuards(AuthGuard())
   findAll(@GetUser() connectedUser: User): Promise<Message[]> {
     return this.messageService.findAll(connectedUser);
   }
@@ -38,15 +39,20 @@ export class MessageController {
   }
 
   @Patch(':id')
-  update(
+  updateMessage(
     @Param('id') idValue: string,
     @Body() updateMessageDto: UpdateMessageDto,
     @GetUser() connectedUser: User,
   ) {
-    return this.messageService.update(idValue, updateMessageDto, connectedUser);
+    return this.messageService.updateMessage(
+      idValue,
+      updateMessageDto,
+      connectedUser,
+    );
   }
   //-------------------------Route delete un MESSAGE--------------------------------------//
   @Delete(':id')
+  @UseGuards(AuthGuard())
   remove(@Param('id') idValue: string, @GetUser() connectedUser: User) {
     return this.messageService.remove(idValue, connectedUser);
   }

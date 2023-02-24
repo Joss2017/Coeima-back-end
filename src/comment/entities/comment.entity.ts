@@ -39,6 +39,7 @@ export class Comment {
 
   @Column({
     nullable: true,
+    type: 'varchar',
   })
   url: string;
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//

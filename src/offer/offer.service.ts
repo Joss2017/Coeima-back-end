@@ -51,11 +51,12 @@ export class OfferService {
     createOfferDto: CreateOfferDto,
     connectedUser: User,
   ) {
-    const { title, body, picture } = createOfferDto;
+    const { title, body, picture, price } = createOfferDto;
     const newOffer = await this.offerRepository.create({
       title,
       body,
       picture,
+      price,
       createdBy: connectedUser,
     });
     console.log('création newOffer-------- ', newOffer);
@@ -101,7 +102,7 @@ export class OfferService {
     }
 
     //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
-    const { title, body } = updateOfferDto;
+    const { title, body, price } = updateOfferDto;
     console.log('le titre du nouveau topic', title);
     console.log('le titre du nouveau commentaire', body);
 
@@ -110,6 +111,9 @@ export class OfferService {
     }
     if (body) {
       offerFound.body = body;
+    }
+    if (price) {
+      offerFound.price = body;
     }
     try {
       return await this.offerRepository.save(offerFound);

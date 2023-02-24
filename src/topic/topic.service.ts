@@ -1,5 +1,6 @@
 import {
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -97,7 +98,7 @@ export class TopicService {
 
     //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
 
-    const { title, body } = updateTopicDto;
+    const { title, body, tag } = updateTopicDto;
     //-------------------------Gestion erreur si même valeur-----------//
 
     if (oneTopicFound.body === body) {
@@ -110,6 +111,14 @@ export class TopicService {
     }
     if (body) {
       oneTopicFound.body = body;
+
+      if (tag === true) {
+        oneTopicFound.tag = tag;
+      } else {
+        throw new InternalServerErrorException(
+          `erreur dans votre topic favoris `,
+        );
+      }
     }
     try {
       return await this.topicRepository.save(oneTopicFound);
