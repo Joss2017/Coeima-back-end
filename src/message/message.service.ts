@@ -62,13 +62,7 @@ export class MessageService {
       console.log('Le message a été enregistré avec succès : ', savedMessage);
       return savedMessage;
     } catch (error) {
-      console.error(
-        "Une erreur est survenue lors de l'enregistrement du message :",
-        error,
-      );
-      throw new InternalServerErrorException(
-        "Une erreur est survenue lors de l'enregistrement du message",
-      );
+      console.log(error);
     }
   }
 
