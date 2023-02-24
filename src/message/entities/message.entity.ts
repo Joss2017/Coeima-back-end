@@ -53,7 +53,6 @@ export class Message {
 
   @ManyToOne(() => User, {
     onDelete: 'CASCADE',
-    eager: true,
     nullable: false,
   })
   @JoinColumn({ name: 'receiver_id' })
@@ -61,7 +60,6 @@ export class Message {
 
   @ManyToOne(() => User, {
     onDelete: 'CASCADE',
-    eager: true,
     nullable: false,
   })
   @JoinColumn({ name: 'sender_id' })

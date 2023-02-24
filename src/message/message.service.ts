@@ -28,16 +28,15 @@ export class MessageService {
 
       if (connectedUser.role === 'admin') {
         allMessagesFound = await this.messageRepository.find();
-        console.log("tout les messages par l'admin", allMessagesFound);
+        console.log("Tous les messages par l'admin", allMessagesFound);
       } else {
         allMessagesFound = await this.messageRepository.findBy({
           receiver: { id: connectedUser.id },
         });
-        console.log('tout les messages par user', allMessagesFound);
+        console.log('Messages par utilisateur', allMessagesFound);
+        console.log('valeur de  connectUser.id ', connectedUser.id);
       }
-      if (!allMessagesFound) {
-        throw new NotFoundException(`Messages  non trouvées`);
-      }
+
       return allMessagesFound;
     } catch (error) {
       ` L'affichage de tout les messages est compromis  `;
@@ -58,22 +57,18 @@ export class MessageService {
     let newMessage: Message = null;
 
     //-------------------------------------------Récupération de l'utilisateur qui va recevoir le message-------------//
-    const receiverId = await this.userRepository.findOneBy({
-      id: createMessageDto.receiver_id,
-    });
-    console.log('id du receiver : ', receiverId);
-    //-------------------------------------------Récupération de l'administrateur qui va recevoir le message-----------//
     const receiverAdmin = await this.userRepository.findOneBy({
-      role: createMessageDto.role,
+      role: RoleEnumType.ADMIN,
     });
-    console.log(
-      'role aldmin par défaut en tant que receiver : ',
-      receiverAdmin,
-    );
+    console.log('receiver admin : ', receiverAdmin);
 
     //-------------------- Si l'utilisateur connecté est un admin, le message est envoyé à l'utilisateur cible-----------//
     if (connectedUser.role === 'admin') {
       //---------------------------------------- Création du message avec les données correspondantes---------------------//
+      const receiverId = await this.userRepository.findOneBy({
+        id: createMessageDto.receiver_id,
+      });
+      console.log('receiver id : ', receiverId);
       newMessage = this.messageRepository.create({
         sender: connectedUser,
         receiver: receiverId,
@@ -182,7 +177,7 @@ export class MessageService {
     //-------------------------Gestion erreur si  user pas autorisé -----------//
 
     if (
-      oneMessageFound.sender.id !== connectedUser.id &&
+      oneMessageFound.receiver.id !== connectedUser.id &&
       connectedUser.role !== 'admin'
     ) {
       throw new UnauthorizedException(

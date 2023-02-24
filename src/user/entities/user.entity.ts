@@ -76,16 +76,19 @@ export class User {
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére personnalisée---------//
 
   @OneToMany(() => Offer, (offers) => offers.createdBy, {
+    eager: true,
     onDelete: 'CASCADE',
   })
   offers: Offer[];
 
   @OneToMany(() => Topic, (topics) => topics.createdBy, {
+    eager: true,
     onDelete: 'CASCADE',
   })
   topics: Topic[];
 
   @OneToMany(() => Comment, (comments) => comments.createdBy, {
+    eager: true,
     onDelete: 'CASCADE',
   })
   comments: Comment[];
@@ -93,11 +96,13 @@ export class User {
   //--------------------------------------------liaison l'entité messages---------------------------------//
 
   @OneToMany(() => Message, (messages) => messages.sender, {
+    eager: true,
     onDelete: 'CASCADE',
   })
   messagesSent: Message[];
 
   @OneToMany(() => Message, (messages) => messages.receiver, {
+    eager: true,
     onDelete: 'CASCADE',
   })
   messagesReceived: Message[];

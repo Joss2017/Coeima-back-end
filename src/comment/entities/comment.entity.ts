@@ -46,7 +46,6 @@ export class Comment {
 
   @ManyToOne(() => User, (users) => users.id, {
     onDelete: 'CASCADE',
-    eager: true,
   })
   createdBy: User;
 

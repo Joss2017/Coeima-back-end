@@ -62,7 +62,6 @@ export class Topic {
   @ManyToOne(() => User, (user) => user.topics, {
     nullable: false,
     onDelete: 'CASCADE',
-    eager: true,
   })
   createdBy: User;
 
@@ -70,7 +69,6 @@ export class Topic {
     onDelete: 'CASCADE',
 
     //---------------------- true = récupére directement les éléments propriétés de l'entité à celle-ci-------------//
-    eager: true,
   })
   comments: Comment[];
 }
