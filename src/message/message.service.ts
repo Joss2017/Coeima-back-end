@@ -143,7 +143,7 @@ export class MessageService {
       );
     }
 
-    if (isRead === true) {
+    if (isRead !== true) {
       oneMessageFound.isRead = isRead;
     } else {
       throw new InternalServerErrorException(

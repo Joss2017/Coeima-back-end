@@ -96,13 +96,11 @@ export class User {
   //--------------------------------------------liaison l'entité messages---------------------------------//
 
   @OneToMany(() => Message, (messages) => messages.sender, {
-    eager: true,
     onDelete: 'CASCADE',
   })
   messagesSent: Message[];
 
   @OneToMany(() => Message, (messages) => messages.receiver, {
-    eager: true,
     onDelete: 'CASCADE',
   })
   messagesReceived: Message[];
