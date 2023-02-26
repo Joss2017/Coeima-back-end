@@ -121,7 +121,7 @@ export class MessageService {
 
     //-------------------------Gestion erreur si  user pas autorisé -----------//
     if (
-      oneMessageFound.sender.id !== connectedUser.id &&
+      oneMessageFound.receiver.id !== connectedUser.id &&
       connectedUser.role !== 'admin'
     ) {
       throw new UnauthorizedException(
@@ -131,25 +131,17 @@ export class MessageService {
 
     //-----------------------------Destructuration de l'update Message------------------------//
 
-    const { body, isRead } = updateMessageDto;
+    const { isRead } = updateMessageDto;
     //-----Comparaison des données entrantes avec Bdd si différentes, nouvelle valeur---------//
-    console.log(' valeur du body entrant', body);
 
-    if (body !== oneMessageFound.body) {
-      oneMessageFound.body = body;
-      console.log(
-        ' Nouvelle valeur de  oneMessageFound ',
-        oneMessageFound.body,
-      );
-    }
-
-    if (isRead !== true) {
+    if (isRead === true) {
       oneMessageFound.isRead = isRead;
     } else {
       throw new InternalServerErrorException(
         `Votre message est toujours en attente`,
       );
     }
+
     try {
       //-----Sauveagarde des données entrantes------------------------//
 

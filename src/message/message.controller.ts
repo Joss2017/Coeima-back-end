@@ -24,7 +24,6 @@ export class MessageController {
   //-------------------------Route afficher tout les MESSAGES-----------------------------//
 
   @Get()
-  @UseGuards(AuthGuard())
   findAll(@GetUser() connectedUser: User): Promise<Message[]> {
     return this.messageService.findAll(connectedUser);
   }

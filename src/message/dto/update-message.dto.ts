@@ -7,8 +7,5 @@ import { CreateMessageDto } from './create-message.dto';
 export class UpdateMessageDto extends PartialType(CreateMessageDto) {
   //--- Import de la class validator permettant de mettre des conditions données entrantes---//
 
-  @IsNotEmpty({ message: 'Le texte de ton post ne peut pas être vide' })
-  body: string;
-
   isRead: boolean;
 }
