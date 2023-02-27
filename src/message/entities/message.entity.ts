@@ -31,18 +31,6 @@ export class Message {
   body: string;
 
   @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  files: string;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  legendFiles?: string;
-
-  @Column({
     default: false,
     nullable: false,
     type: 'boolean',

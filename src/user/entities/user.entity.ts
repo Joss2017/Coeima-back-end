@@ -61,18 +61,6 @@ export class User {
   })
   phone: string;
 
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  files: string;
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  legendFiles?: string;
-
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére personnalisée---------//
 
   @OneToMany(() => Offer, (offers) => offers.createdBy, {

@@ -51,11 +51,11 @@ export class OfferService {
     createOfferDto: CreateOfferDto,
     connectedUser: User,
   ) {
-    const { title, body, picture, price } = createOfferDto;
+    const { title, body, file, price } = createOfferDto;
     const newOffer = await this.offerRepository.create({
       title,
       body,
-      picture,
+      file,
       price,
       createdBy: connectedUser,
     });

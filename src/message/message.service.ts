@@ -51,7 +51,7 @@ export class MessageService {
     connectedUser: User,
   ): Promise<Message> {
     //---------------------------------------- Récupération des données du message à créer---------------------------//
-    const { body, files, legendFiles } = createMessageDto;
+    const { body } = createMessageDto;
 
     //--------------------------------- Initialisation de la variable qui va contenir le nouveau message-------------//
     let newMessage: Message = null;
@@ -73,8 +73,6 @@ export class MessageService {
         sender: connectedUser,
         receiver: receiverId,
         body,
-        files,
-        legendFiles,
       });
     }
     //------------------Si l'utilisateur connecté est un simple utilisateur, le message est envoyé à l'administrateur-------//
@@ -84,8 +82,6 @@ export class MessageService {
         sender: connectedUser,
         receiver: receiverAdmin,
         body,
-        files,
-        legendFiles,
       });
     }
     try {
