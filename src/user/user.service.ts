@@ -153,7 +153,7 @@ export class UserService {
 
     try {
       const result = await this.userRepository.delete({
-        id: connectedUser.id,
+        id: oneUserFound.id,
       });
       console.log('valeur du result par id', result);
       if (result.affected !== 0) {

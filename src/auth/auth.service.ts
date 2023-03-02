@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto ';
@@ -77,12 +76,13 @@ export class AuthService {
       const payload = {
         id: userFound.id,
         email: userFound.email,
-        role: userFound.role,
       };
       console.log('valeur du user dans payload', payload);
       // ----------------------------------------Génération du token---------------------------------------//
 
       const accessToken = await this.jwtService.sign(payload);
+      console.log('valeur du  accestoken', accessToken);
+
       return { accessToken };
     } else {
       throw new UnauthorizedException('identifiants erronés');

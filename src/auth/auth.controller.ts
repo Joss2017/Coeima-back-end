@@ -17,7 +17,7 @@ export class AuthController {
   //------------------------------Ici la route vers service=>user connexion profil---------------------------------//
 
   @Post('login')
-  login(@Body() loginDto: LoginAuthDto) {
+  login(@Body() loginDto: LoginAuthDto): Promise<{ accessToken: string }> {
     return this.authService.login(loginDto);
   }
 }

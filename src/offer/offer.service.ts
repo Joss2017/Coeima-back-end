@@ -50,12 +50,12 @@ export class OfferService {
   async createOfferByAdmin(
     createOfferDto: CreateOfferDto,
     connectedUser: User,
-  ) {
-    const { title, body, file, price } = createOfferDto;
+  ): Promise<Offer> {
+    const { title, body, picture, price } = createOfferDto;
     const newOffer = await this.offerRepository.create({
       title,
       body,
-      file,
+      picture,
       price,
       createdBy: connectedUser,
     });

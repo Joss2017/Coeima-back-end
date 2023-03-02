@@ -16,7 +16,7 @@ export class Offer {
     nullable: true,
     type: 'varchar',
   })
-  file: string;
+  picture: string;
 
   @Column({
     nullable: false,

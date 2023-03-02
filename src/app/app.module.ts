@@ -15,6 +15,8 @@ import { CommentModule } from '../comment/comment.module';
 import { Comment } from '../comment/entities/comment.entity';
 import { MessageModule } from '../message/message.module';
 import { Message } from '../message/entities/message.entity';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 //--------------------Permet de relier au fichier .env.local stockant des données sensibles---------------------//
 
@@ -27,6 +29,7 @@ dotenv.config({ path: './env/.env.local' });
     ConfigModule.forRoot({
       envFilePath: '.env.local',
     }),
+    ServeStaticModule.forRoot({ rootPath: join(__dirname, '..', 'pictures') }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,

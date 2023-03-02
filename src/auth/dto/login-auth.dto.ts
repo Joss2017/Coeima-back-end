@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 // -----------------------------------Connexion du compte USER------------------------------//
 
 export class LoginAuthDto {
