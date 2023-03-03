@@ -85,24 +85,16 @@ export class TopicService {
     if (!oneTopicFound) {
       throw new NotFoundException("Ce topic n'existe pas");
     }
-    //-------------------------Gestion erreur si  user pas autorisé -----------//
-
-    if (
-      oneTopicFound.createdBy.id !== connectedUser.id &&
-      connectedUser.role !== 'admin'
-    ) {
-      throw new UnauthorizedException(
-        "Vous n'êtes pas autorisé à modifier ces informations",
-      );
-    }
 
     //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
 
-    const { title, body, tag } = updateTopicDto;
+    const { title, body, tag, favorites } = updateTopicDto;
     //-------------------------Gestion erreur si même valeur-----------//
 
     if (oneTopicFound.body === body) {
       throw new Error('Erreur, le titre du post est le même que precedemment');
+    } else {
+      oneTopicFound.body;
     }
     console.log('le titre du nouveau commentaire', body);
 
@@ -113,6 +105,11 @@ export class TopicService {
       oneTopicFound.body = body;
 
       if (tag === true) {
+        oneTopicFound.tag = tag;
+      } else {
+        throw new InternalServerErrorException(`erreur dans votre alerte `);
+      }
+      if (favorites === true) {
         oneTopicFound.tag = tag;
       } else {
         throw new InternalServerErrorException(

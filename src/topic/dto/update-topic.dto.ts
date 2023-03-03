@@ -17,5 +17,7 @@ export class UpdateTopicDto extends PartialType(CreateTopicDto) {
   @IsUrl({ message: "ton lien URL n'est pas valide" })
   url: string;
 
+  favorites: boolean;
+
   tag: boolean;
 }
