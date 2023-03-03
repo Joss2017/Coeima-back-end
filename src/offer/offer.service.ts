@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -87,25 +83,17 @@ export class OfferService {
     //-------------------------Gestion erreur si pas de topic dans la BDD -------//
 
     if (!offerFound) {
-      throw new NotFoundException("Ce sujet n'existe pas");
-    }
-
-    //-------------------------Gestion erreur si même valeur-----------//
-
-    if (
-      offerFound.createdBy.id !== connectedUser.id &&
-      connectedUser.role !== 'admin'
-    ) {
-      throw new UnauthorizedException(
-        "Vous n'êtes pas autorisé à modifier ces informations",
-      );
+      throw new NotFoundException("Cette offre n'existe pas");
     }
 
     //-----Destructuration de l'update afin de vérifier si données dejà existantes ----//
-    const { title, body, price } = updateOfferDto;
-    console.log('le titre du nouveau topic', title);
-    console.log('le titre du nouveau commentaire', body);
+    const { title, body, picture, price } = updateOfferDto;
+    console.log('le titre de la nouvelle offre', title);
+    console.log('le body la nouvelle offre', body);
 
+    if (picture) {
+      offerFound.picture = picture;
+    }
     if (title) {
       offerFound.title = title;
     }
@@ -113,7 +101,7 @@ export class OfferService {
       offerFound.body = body;
     }
     if (price) {
-      offerFound.price = body;
+      offerFound.price = price;
     }
     try {
       return await this.offerRepository.save(offerFound);

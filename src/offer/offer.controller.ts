@@ -67,7 +67,7 @@ export class OfferController {
     @UploadedFile() picture: Express.Multer.File,
     @Body() createOfferDto: CreateOfferDto,
     @GetUser() connectedUser: User,
-  ) {
+  ): Promise<Offer> {
     const offer: CreateOfferDto = {
       ...createOfferDto,
       picture: picture.filename, // inclus le picture dans le dto//
@@ -84,16 +84,18 @@ export class OfferController {
   @Patch(':id')
   @UseGuards(AuthGuard(), RolesGuard)
   @Roles(RoleEnumType.ADMIN)
+  @UseInterceptors(FileInterceptor('picture'))
   updateOfferByAdmin(
     @Param('id') idValue: string,
+    @UploadedFile() picture: Express.Multer.File,
     @Body() updateOfferDto: UpdateOfferDto,
     @GetUser() connectedUser: User,
   ): Promise<Offer> {
-    return this.offerService.updateOfferByAdmin(
-      idValue,
-      updateOfferDto,
-      connectedUser,
-    );
+    const offer: CreateOfferDto = {
+      ...updateOfferDto,
+      picture: picture.filename, // inclus le picture dans le dto//
+    };
+    return this.offerService.updateOfferByAdmin(idValue, offer, connectedUser);
   }
 
   //-------------------------Route delete un OFFER--------------------------------------//
