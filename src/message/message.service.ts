@@ -24,10 +24,12 @@ export class MessageService {
 
   async findAll(connectedUser: User) {
     try {
-      let allMessagesFound: Message[] = null;
+      let allMessagesFound: Message[] = [];
 
       if (connectedUser.role === 'admin') {
-        allMessagesFound = await this.messageRepository.find();
+        allMessagesFound = await this.messageRepository.findBy({
+          receiver: { role: RoleEnumType.ADMIN },
+        });
         console.log("Tous les messages par l'admin", allMessagesFound);
       } else {
         allMessagesFound = await this.messageRepository.findBy({

@@ -13,7 +13,7 @@ export class Offer {
   //-------------------------------- génération des colonnes-------------------------------------------//
 
   @Column({
-    nullable: true,
+    nullable: false,
     type: 'varchar',
   })
   picture: string;
@@ -27,13 +27,13 @@ export class Offer {
   title: string;
 
   @Column({
-    nullable: true,
+    nullable: false,
     type: 'text',
   })
   body: string;
 
   @Column({
-    nullable: true,
+    nullable: false,
     type: 'varchar',
   })
   price: string;
