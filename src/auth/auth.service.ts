@@ -46,7 +46,7 @@ export class AuthService {
       console.log('user enregistré', newUser);
       delete createdUser.password;
       return createdUser;
-    } catch (error) {
+    } catch (error: any) {
       //------------------------------------------- gestion des erreurs---------------------------------------//
 
       if (error.code === '23505') {

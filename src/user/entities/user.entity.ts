@@ -32,6 +32,7 @@ export class User {
   @Column({
     nullable: false,
     type: 'varchar',
+    unique: true,
 
     //--------------------------------  par default length 255------------------------------------------//
 

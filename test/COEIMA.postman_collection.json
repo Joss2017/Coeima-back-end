@@ -10,7 +10,7 @@
 			"name": "auth",
 			"item": [
 				{
-					"name": "signup",
+					"name": "register",
 					"event": [
 						{
 							"listen": "test",
@@ -38,7 +38,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nickname\": \"Joss\",\r\n    \"email\": \"josselin.baptiste@gmail.com\",\r\n    \"password\": \"Justedevit**\",\r\n    \"phone\": \"0637421923\"\r\n}",
+							"raw": "{\r\n    \"nickname\": \"Cam\",\r\n     \"email\": \"camille.joaquim@gmail.com\",\r\n    \"password\": \"Justedevit**\",\r\n    \"role\":\"admin\"\r\n\r\n    \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -88,7 +88,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"Camille.joaquim@gmail.com\",\r\n    \"password\": \"Justedevit**\"\r\n}\r\n",
+							"raw": "{\r\n   \r\n    \"email\": \"Dada.Bapt@gmail.com\",\r\n    \"password\": \"Justedevit**\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -191,6 +191,34 @@
 							]
 						},
 						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/{{idUser}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"{{idUser}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserById",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
 						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/user/{{idUser}}",
@@ -429,6 +457,24 @@
 					"response": []
 				},
 				{
+					"name": "getOnePictureOfferByPicturename",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/offer/{{idOffer}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"offer",
+								"{{idOffer}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "createOffer",
 					"event": [
 						{
@@ -548,6 +594,9 @@
 			"item": [
 				{
 					"name": "getAllMessages",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -561,6 +610,15 @@
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{baseUrl}}/message",
 							"host": [
@@ -602,7 +660,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"body\":\"Le théâtre romain de Montaudou est un édifice de spectacle construit en Gaule, dans la cité des Arvernes, sur l'actuelle commune de Ceyrat dans le département du Puy-de-Dôme. Ses vestiges sont décrits depuis le début du xixe siècle grâce à la présence d'un long mur d'une cinquantaine de mètres, connu localement sous l'appellation de Mur des Sarrasins. S'il a été interprété en tant que sanctuaire dédié à Mercure puis en tant que villa romaine, dès la seconde moitié du xxe siècle émerge l'hypothèse d'un théâtre romain antique. Ce n'est toutefois qu'à l'occasion d'une série de sondages menés dans les années 2000 que cette interprétation est validée. Construit à la fin du ier siècle avec un diamètre de 51 m, le théâtre connait un second état vers la seconde moitié du iie siècle, avec un diamètre porté à 81 m. Il s'agit néanmoins d'un édifice peu documenté, notamment sur son évolution et sur son abandon. S'il est désormais acquis que le théâtre n'est pas isolé, notamment de probables habitations et d'un potentiel temple à plan centré, la nature exacte de ce pôle implanté à 1,5 km au sud-ouest d'Augustonemetum/Clermont-Ferrand n'est pas connue, l'hypothèse d'une agglomération secondaire indépendante de la capitale arverne ayant été formulée.\"\r\n}",
+							"raw": "{\r\n    \r\n    \"body\":\"hello jossbpt 4\",\r\n    \"files\":\"\",\r\n     \"legendFiles\":\"\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -610,13 +668,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/message/",
+							"raw": "{{baseUrl}}/message",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"message",
-								""
+								"message"
 							]
 						}
 					},
