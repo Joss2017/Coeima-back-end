@@ -4,5 +4,5 @@ export class CreateOfferDto {
   picture: string;
   title: string;
   body: string;
-  price: string;
+  price: number;
 }

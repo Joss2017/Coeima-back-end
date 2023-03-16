@@ -34,9 +34,8 @@ export class Offer {
 
   @Column({
     nullable: false,
-    type: 'varchar',
   })
-  price: string;
+  price: number;
 
   //----------------------liaison tables suivant leurs cardinalités via clé étrangére--------------------//
   @ManyToOne(() => User, (user) => user.offers, {

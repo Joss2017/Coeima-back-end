@@ -53,7 +53,7 @@ export class MessageService {
     connectedUser: User,
   ): Promise<Message> {
     //---------------------------------------- Récupération des données du message à créer---------------------------//
-    const { body } = createMessageDto;
+    const { body, receiver_id } = createMessageDto;
 
     //--------------------------------- Initialisation de la variable qui va contenir le nouveau message-------------//
     let newMessage: Message = null;
@@ -67,13 +67,13 @@ export class MessageService {
     //-------------------- Si l'utilisateur connecté est un admin, le message est envoyé à l'utilisateur cible-----------//
     if (connectedUser.role === 'admin') {
       //---------------------------------------- Création du message avec les données correspondantes---------------------//
-      const receiverId = await this.userRepository.findOneBy({
-        id: createMessageDto.receiver_id,
+      const receiver = await this.userRepository.findOneBy({
+        id: receiver_id,
       });
-      console.log('receiver id : ', receiverId);
+      console.log('receiver id : ', receiver);
       newMessage = this.messageRepository.create({
         sender: connectedUser,
-        receiver: receiverId,
+        receiver: receiver,
         body,
       });
     }

@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-//----------Mise en place des différentes colommnes via type ORM  de l'entité topics----------//
+//----------Mise en place des différentes colommnes via type ORM  de l'entité Message----------//
 
 @Entity()
 export class Message {

@@ -6,5 +6,5 @@ import { CreateOfferDto } from './create-offer.dto';
 export class UpdateOfferDto extends PartialType(CreateOfferDto) {
   title: string;
   body: string;
-  price: string;
+  price: number;
 }
