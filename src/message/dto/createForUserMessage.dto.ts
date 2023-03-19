@@ -2,12 +2,12 @@
 
 import { IsNotEmpty, IsUUID } from 'class-validator';
 
-export class CreateMessageDto {
+export class CreateUserMessageDto {
   //--- Import de la class validator permettant de mettre des conditions données entrantes---//
 
   @IsNotEmpty({ message: 'ton message ne peut pas être vide' })
   body: string;
 
-  @IsUUID(4, { message: 'Merci de saisir un utilsateur' })
+  @IsUUID(4, { message: 'Merci de saisir un utilisateur' })
   receiver_id?: string;
 }

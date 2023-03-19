@@ -632,19 +632,7 @@
 					"response": []
 				},
 				{
-					"name": "createMessage",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = pm.response.json();\r",
-									"pm.environment.set(\"idMessage\",jsonData.id);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
+					"name": "createMessageForUser",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -660,7 +648,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \r\n    \"body\":\"hello jossbpt 4\",\r\n    \"files\":\"\",\r\n     \"legendFiles\":\"\"\r\n}",
+							"raw": "{\r\n\"reciver_id\":\"802d6acd-13ca-4e10-ac17-0eaaa207f924\",\r\n    \"body\":\"Ceci est la \"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -668,12 +656,50 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/message",
+							"raw": "{{baseUrl}}/message/",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"message"
+								"message",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createMessageForAdmin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n    \"body\":\"Ceci est la conclusion de mes différents test établis\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/message/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"message",
+								""
 							]
 						}
 					},

@@ -7,8 +7,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleEnumType, User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { CreateMessageDto } from './dto/createForUserMessage.dto';
 import { CreateAdminMessageDto } from './dto/createForAdminmessage.dto ';
+import { CreateUserMessageDto } from './dto/createForUserMessage.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { Message } from './entities/message.entity';
 
@@ -50,11 +50,11 @@ export class MessageService {
   // -----------------------------------------------Méthode créer un MESSAGE USER connecté---------------------------//
 
   async createMessage(
-    createMessageDto: CreateMessageDto,
+    createMessageUser: CreateUserMessageDto,
     connectedUser: User,
   ): Promise<Message> {
     //---------------------------------------- DTO destructuré---------------------------//
-    const { body, receiver_id } = createMessageDto;
+    const { body, receiver_id } = createMessageUser;
 
     //-------------------------------- Création du message avec les données correspondantes---------------------//
     const receiver = await this.userRepository.findOneBy({
@@ -78,10 +78,10 @@ export class MessageService {
   }
 
   async createAdminMessage(
-    createAdminMessageDto: CreateAdminMessageDto,
+    createMessageAdmin: CreateAdminMessageDto,
     connectedUser: User,
   ): Promise<Message> {
-    const { body } = createAdminMessageDto;
+    const { body } = createMessageAdmin;
     const receiverAdmin = await this.userRepository.findOneBy({
       role: RoleEnumType.ADMIN,
     });

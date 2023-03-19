@@ -14,10 +14,10 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/decorator/get-user.decorator';
 import { Message } from './entities/message.entity';
 import { RoleEnumType, User } from 'src/user/entities/user.entity';
-import { CreateMessageDto } from './dto/createForUserMessage.dto';
+import { CreateUserMessageDto } from './dto/createForUserMessage.dto';
+import { CreateAdminMessageDto } from './dto/createForAdminmessage.dto ';
 import { Roles } from 'src/decorator/roles.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
-import { CreateAdminMessageDto } from './dto/createForAdminmessage.dto ';
 
 @Controller('message')
 @UseGuards(AuthGuard())
@@ -31,27 +31,31 @@ export class MessageController {
     return this.messageService.findAll(connectedUser);
   }
 
-  //-------------------------Route créer un MESSAGE userConnecté--------------------------------------//
+  //-------------------------Route créer un MESSAGE AdminConnecté--------------------------------------//
   @Post()
   @UseGuards(RolesGuard)
   @Roles(RoleEnumType.ADMIN)
   createMessage(
-    @Body() createMessageUser: CreateMessageDto,
+    @Body() createMessageUser: CreateUserMessageDto,
     @GetUser() connectedUser: User,
   ): Promise<Message> {
     return this.messageService.createMessage(createMessageUser, connectedUser);
   }
 
+  //-------------------------Route créer un MESSAGE userConnecté--------------------------------------//
+
   @Post('/admin')
   createAdminMessage(
-    @Body() createMessageDto: CreateAdminMessageDto,
+    @Body() createMessageAdmin: CreateAdminMessageDto,
     @GetUser() connectedUser: User,
   ): Promise<Message> {
     return this.messageService.createAdminMessage(
-      createMessageDto,
+      createMessageAdmin,
       connectedUser,
     );
   }
+
+  //-------------------------Route update un MESSAGE--------------------------------------//
 
   @Patch(':id')
   updateMessage(
