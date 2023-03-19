@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateMessageDto } from './create-message.dto';
+import { CreateMessageDto } from './createForUserMessage.dto';
 
 //--- UPDATE Data Transfert Object modèle de conception utilisé pour transférer des données entre les couches---//
 

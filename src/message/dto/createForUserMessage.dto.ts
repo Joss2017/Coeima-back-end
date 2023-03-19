@@ -1,16 +1,13 @@
 //--- POST Data Transfert Object modèle de conception utilisé pour transférer des données entre les couches---//
 
-import { IsNotEmpty, IsUUID, ValidateIf } from 'class-validator';
-import { RoleEnumType } from 'src/user/entities/user.entity';
+import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateMessageDto {
   //--- Import de la class validator permettant de mettre des conditions données entrantes---//
 
-  role: string;
   @IsNotEmpty({ message: 'ton message ne peut pas être vide' })
   body: string;
 
-  @ValidateIf((user) => user.role === RoleEnumType.ADMIN)
-  @IsUUID(4)
+  @IsUUID(4, { message: 'Merci de saisir un utilsateur' })
   receiver_id?: string;
 }
