@@ -8,7 +8,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RoleEnumType, User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { CreateAdminMessageDto } from './dto/create-message.dto copy';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { Message } from './entities/message.entity';
 
@@ -53,46 +52,40 @@ export class MessageService {
     createMessageDto: CreateMessageDto,
     connectedUser: User,
   ): Promise<Message> {
-    //---------------------------------------- DTO destructuré---------------------------//
+    //---------------------------------------- Récupération des données du message à créer---------------------------//
     const { body, receiver_id } = createMessageDto;
 
-    //-------------------------------- Création du message avec les données correspondantes---------------------//
-    const receiver = await this.userRepository.findOneBy({
-      id: receiver_id,
-    });
-    console.log('receiver id : ', receiver);
-    const newMessage = this.messageRepository.create({
-      sender: connectedUser,
-      receiver: receiver,
-      body,
-    });
+    //--------------------------------- Initialisation de la variable qui va contenir le nouveau message-------------//
+    let newMessage: Message = null;
 
+    //-------------------- Si l'utilisateur connecté est un admin, le message est envoyé à l'utilisateur cible-----------//
+    if (connectedUser.role === 'admin') {
+      //---------------------------------------- Création du message avec les données correspondantes---------------------//
+      const receiver = await this.userRepository.findOneBy({
+        id: receiver_id,
+      });
+      console.log('receiver id : ', receiver);
+      newMessage = this.messageRepository.create({
+        sender: connectedUser,
+        receiver: receiver,
+        body,
+      });
+    }
+    //------------------Si l'utilisateur connecté est un simple utilisateur, le message est envoyé à l'administrateur-------//
+    else if (connectedUser.role === 'user') {
+      //-------------------------------------------Récupération de l'utilisateur qui va recevoir le message-------------//
+      const receiverAdmin = await this.userRepository.findOneBy({
+        role: RoleEnumType.ADMIN,
+      });
+      console.log('receiver admin : ', receiverAdmin);
+      newMessage = this.messageRepository.create({
+        sender: connectedUser,
+        receiver: receiverAdmin,
+        body,
+      });
+    }
     try {
       //------------------------- Enregistrement du message dans la base de données-----------------------------------------//
-      const savedMessage = await this.messageRepository.save(newMessage);
-      console.log('Le message a été enregistré avec succès : ', savedMessage);
-      return savedMessage;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async createAdminMessage(
-    createAdminMessageDto: CreateAdminMessageDto,
-    connectedUser: User,
-  ): Promise<Message> {
-    const { body } = createAdminMessageDto;
-    const receiverAdmin = await this.userRepository.findOneBy({
-      role: RoleEnumType.ADMIN,
-    });
-
-    const newMessage = this.messageRepository.create({
-      sender: connectedUser,
-      receiver: receiverAdmin,
-      body,
-    });
-
-    try {
       const savedMessage = await this.messageRepository.save(newMessage);
       console.log('Le message a été enregistré avec succès : ', savedMessage);
       return savedMessage;
