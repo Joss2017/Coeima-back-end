@@ -4,7 +4,9 @@ import { IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateMessageDto {
   //--- Import de la class validator permettant de mettre des conditions données entrantes---//
+
   role: string;
+
   @IsUUID(4, { message: 'Merci de saisir un utilisateur' })
   receiver_id: string;
 
